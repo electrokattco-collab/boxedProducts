@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      /* Base styles */
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f4;
+          background-image: url('boxedProducts/background.jpg'); /* Background image path */
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+      }
+
+      span {
+          font-weight: bold;
+          font-family: cursive;
+          font-size: 12pt;
+      }
+
+      .header-with-background {
+          background-image: url('your-background-image.jpg'); /* Replace with the correct image path */
+          background-size: cover;
+          background-position: center;
+          padding: 10px 0;
+          text-align: center;
+      }
+
+      .header-with-background .logo {
+          font-size: 2.8rem;
+          font-weight: bold;
+          color: #c3d21e;
+          text-decoration: none;
+          letter-spacing: 2px;
+          transition: transform 0.3s ease-in-out;
+          display: inline-block;
+      }
+
+      .header-with-background nav ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .header-with-background nav ul li {
+          margin: 0 10px;
+      }
+
+      .header-with-background nav ul li a {
+          text-decoration: none;
+          color: #fff;
+          font-weight: bold;
+          transition: color 0.3s ease;
+      }
+
+      .header-with-background nav ul li a:hover {
+          color: #ff6600;
+      }
+
+      header {
+          background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+          color: white;
+          padding: 10px;
+          text-align: center;
+      }
+
+      main {
+          padding: 20px;
+          text-align: center;
+      }
+
+      #payment-container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background-color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h2, h3 {
+          color: #333;
+      }
+
+      .payment-field {
+          margin-bottom: 15px;
+      }
+
+      .payment-field label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+      }
+
+      .payment-field p {
+          font-size: 16px;
+          margin: 5px 0;
+      }
+
+      .total-price {
+          font-size: 18px;
+          font-weight: bold;
+          margin-top: 20px;
+          color: #333;
+      }
+
+      .security-info, .privacy-policy {
+          margin-top: 20px;
+          padding: 15px;
+          border-radius: 5px;
+      }
+
+      .security-info {
+          background-color: #e9f5f9;
+          border: 1px solid #bcdff2;
+      }
+
+      .privacy-policy {
+          background-color: #f8f9fa;
+          border: 1px solid #ddd;
+      }
+
+      .testimony-section {
+          margin-top: 30px;
+          text-align: center;
+      }
+
+      .testimony-image {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+      }
+
+      .testimony-text {
+          margin-top: 10px;
+          font-size: 18px;
+          color: #555;
+      }
+
+      .contact-links {
+          margin-top: 20px;
+          text-align: center;
+      }
+
+      .contact-links a {
+          display: inline-block;
+          margin: 10px;
+          text-decoration: none;
+          color: #007bff;
+          font-size: 18px;
+          font-weight: bold;
+          transition: color 0.3s;
+      }
+
+      .contact-links a:hover {
+          color: #0056b3;
+      }
+
+      .security-info p {
+          margin: 0;
+          font-size: 16px;
+      }
+
+      /* Button Styles */
+      #alert-button {
+          background-color: #007bff; /* Primary color */
+          color: white;
+          border: none;
+          border-radius: 5px;
+          padding: 10px 20px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+      }
+
+      #alert-button:hover {
+          background-color: #0056b3; /* Darker shade on hover */
+          transform: scale(1.05); /* Slightly increase size */
+      }
+
+      #alert-button:active {
+          background-color: #004080; /* Even darker shade when clicked */
+          transform: scale(0.98); /* Slightly decrease size */
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+          .payment-field p {
+              font-size: 14px;
+          }
+
+          .testimony-text {
+              font-size: 16px;
+          }
+
+          .contact-links a {
+              font-size: 16px;
+          }
+      }
+
+      @media (max-width: 480px) {
+          header {
+              font-size: 18px;
+              padding: 15px;
+          }
+
+          #payment-container {
+              padding: 15px;
+          }
+
+          .payment-field p {
+              font-size: 14px;
+          }
+
+          .testimony-text {
+              font-size: 14px;
+          }
+
+          .contact-links a {
+              display: block;
+              margin: 5px 0;
+              font-size: 14px;
+          }
+      }
+
+      /* Terms and Conditions Styles */
+      .terms-conditions {
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 20px;
+          margin-top: 30px;
+          text-align: center;
+      }
+
+      .terms-conditions h3 {
+          margin-top: 0;
+      }
+    </style>
+</head>
+<body>
+    <header class="header-with-background">
+        <a href="#" class="logo">boxed.sneaks</a>
+        <nav>
+            <ul>
+                <li><a href="boxedSneakers.html">Home</a></li>
+                <li><a href="boxedExplore copy.html">Explore</a></li>
+                <li><a href="boxedContacts.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="payment-container">
+            <h2>Banking Details</h2>
+            <div class="payment-field">
+                <label for="bank-name">Bank Name :</label>
+                <p>TymeBank</p>
+            </div>
+            <div class="payment-field">
+                <label for="branch-code">Branch Code:</label>
+                <p>678910</p>
+            </div>
+            <div class="payment-field">
+                <label for="account-number">Account Number:</label>
+                <p>53000794861</p>
+            </div>
+            <div class="payment-field">
+                <label for="account-name">Account Name:</label>
+                <p>BoxedSneaks.Za</p>
+            </div>
+
+            <!-- Total Price Display -->
+            <div class="total-price" id="total-price">
+                <!-- Total price will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Testimonial Section -->
+        <div class="testimony-section">
+            <h2>PLEASE SEND PROOF OF PAYMENT AS SHOWN BELOW</h2>
+            <div class="testimony-content">
+                <img src="boxedProducts/testimony.jpg" alt="Customer Testimonial" class="testimony-image">
+            </div>
+        </div>
+
+        <!-- Contact Links -->
+        <div class="contact-links">
+            <a href="https://www.instagram.com/boxed.sneaks_za/#" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://wa.me/+27650947689" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="mailto:info@boxed.sneaks.com">Email Us</a>
+        </div>
+
+        <!-- Security Information -->
+        <div class="security-info">
+            <h3>Your Security is Our Priority</h3>
+            <p>At <span>boxed.sneaks_za</span>, we take your security and privacy very seriously. All payment transactions are processed through secure, encrypted channels to ensure your personal information is protected. We use the latest security measures to safeguard your data and prevent unauthorized access. Your trust is paramount to us, and we are committed to maintaining the highest standards of security for all your transactions.</p>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-conditions">
+            <h3>Terms and Conditions</h3>
+            <p>By proceeding with the payment, you agree to our terms and conditions. Please make sure you understand our return policy, payment terms, and privacy policy. For any questions, feel free to contact us.</p>
+        </div>
+        <!-- JavaScript Section -->
+        <button id="alert-button">Paid? Click ME</button>
+    </main>
+
+    <script>
+        document.getElementById('alert-button').addEventListener('click', function() {
+            alert('Thank you for your payment! We will contact you soon as proof of payment has been received! Enjoy your Day!');
+        });
+
+        // Function to retrieve total price from localStorage and display it
+        function displayTotalPrice() {
+            const totalPrice = localStorage.getItem('totalPrice');
+            if (totalPrice) {
+                document.getElementById('total-price').textContent = `Total Price: R${totalPrice}`;
+            } else {
+                document.getElementById('total-price').textContent = 'Total Price: Not Available';
+            }
+        }
+
+        // Call the function to display total price when the page loads
+        displayTotalPrice();
+    </script>
+</body>
+</html>

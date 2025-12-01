@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop premium sneakers and footwear at Boxed Sneakers. Explore our collection from top brands like Nike and Adidas.">
+    <title>boxedsneakers.com</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-Fly3QiXdU4RjJ+Q6eeq4RBWyqem/1n5nx9XZ9c+NuS3FTEg0ZkWmbqW1B4zQI5wT1V9coN/vRqlfmaPhCf0Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="scriptJava.js" defer></script>
+  </head>
+  <body class="backPic">
+    
+    <style>
+      /* Reset and general styling */
+      * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      }
+      body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f0f0f0;
+      background-image: url('boxedProducts/back.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
+      }
+      .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      }
+      header {
+      background-color: #000000e0;
+      padding: 10px 0;
+      text-align: center;
+      }
+      .header-with-background {
+      background-size: cover;
+      background-position: center 30%;
+      background-repeat: no-repeat;
+      padding-left: 4px;
+      color: #fff;
+      filter: brightness(80%) contrast(120%);
+      }
+      .logo {
+      font-family: cursive;
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-block;
+      text-transform: lowercase;
+      letter-spacing: 2px;
+      transition: transform 0.3s ease-in-out;
+      border-radius: 49px 48px 47px 47px;
+      }
+      nav ul {
+      list-style-type: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .sticky {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      nav ul li {
+      margin: 0 10px;
+      }
+      nav ul li a {
+      text-decoration: none;
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      transition: color 0.3s ease;
+      }
+      .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      #searchInput {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 2px solid #ccc;
+      border-radius: 20px 0 0 20px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      }
+      #searchInput:focus {
+      border-color: #ff6600;
+      }
+      .search-btn {
+      background-color: #ff6600;
+      color: #ffffff;
+      border: none;
+      padding: 19px 19px;
+      border-radius: 0 20px 20px 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      }
+      .search-btn:hover {
+      background-color: #dbb91f;
+      }
+      .fa-search {
+      font-size: 1.2rem;
+      }
+      /* Main section */
+      .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      justify-items: center;
+      align-items: start;
+      }
+      .product {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 300px;
+      text-align: center;
+      transition: transform 0.3s ease;
+      }
+      .product img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      }
+      .product h2 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 10px;
+      }
+      .product p {
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 15px;
+      }
+      .product .price {
+      font-size: 1.2rem;
+      color: #007bff;
+      font-weight: bold;
+      }
+      .product button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      }
+      .product button:hover {
+      background-color: #0056b3;
+      transform: translateY(-5px);
+      }
+      .product:hover {
+      transform: translateY(-5px);
+      }
+      /* About section */
+      .about-section {
+      background-color: #f8f8f8;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+      }
+      .containerAbout h2 {
+      font-size: 2rem;
+      color: #00c130;
+      margin-bottom: 20px;
+      }
+      .containerStory h2 {
+      font-size: 2rem;
+      color: rgb(0, 0, 0);
+      margin-bottom: 15px;
+      }
+      /* Footer */
+      footer {
+      background-color: #000000;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      }
+      .container1 {
+      text-align: center;
+      background-color: rgb(255, 255, 255);
+      height: 70px;
+      border: 5px outset rgb(0, 0, 0);
+      }
+      .container2 {
+      height: 10px;
+      background-color: chartreuse;
+      border: 5px outset rgb(4, 0, 255);
+      }
+      /* Modal styles */
+      .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 900px;
+      position: relative;
+      }
+      .modal-images {
+      position: relative;
+      text-align: center;
+      }
+      .modal-images img {
+      max-width: 50%;
+      height: auto;
+      border-radius: 8px;
+      }
+      .prev-btn,
+      .next-btn {
+      background-color: #000000;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      }
+      .prev-btn {
+      left: 10px;
+      }
+      .next-btn {
+      right: 10px;
+      }
+      .prev-btn:hover,
+      .next-btn:hover {
+      background-color: #0056b3;
+      }
+      .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+      }
+      .modal-footer {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      }
+      .modal-footer button {
+      background-color: #000000;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      }
+      .modal-footer button:hover {
+      background-color: #0056b3;
+      }
+    </style>
+    <header class="header-with-background">
+      <div class="container">
+        <a href="boxedHome.html" class="logo">boxedsneakz_za</a>
+        <nav>
+          <ul>
+            <li><a href="boxedHome.html">Home</a></li>
+            <li><a href="boxedCart.html">View Cart</a></li>
+            <li><a href="boxedAboutUs.html">About Us</a></li>
+            <li><a href="boxedContacts.html">Contacts</a></li>
+            <li>
+              <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for products...">
+                <button class="search-btn" onclick="performSearch()">
+                <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    
+  </body>
+</html>

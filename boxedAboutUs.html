@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boxed Sneakers - About Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        header {
+            background-color: #2c3e50; /* Darker background for contrast */
+            color: #ecf0f1; /* Light text color */
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, padding 0.3s ease;
+            animation: headerFadeIn 1s ease-in-out;
+        }
+
+        @keyframes headerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-with-background {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #e67e22; /* Bright accent color */
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease-in-out, color 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            color: #f39c12; /* Lighter hover color */
+        }
+
+        .header-with-background nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .header-with-background nav ul li {
+            margin: 0 10px;
+        }
+
+        .header-with-background nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .header-with-background nav ul li a:hover {
+            color: #ff6600;
+        }
+
+        .nav-toggle {
+            display: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-with-background nav ul {
+                flex-direction: column;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background-color: #333;
+                padding: 1rem;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 1000;
+            }
+
+            .header-with-background nav.active ul {
+                transform: translateY(0);
+            }
+
+            .nav-toggle {
+                display: block;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: none;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                font-size: 1.5rem;
+                z-index: 1001;
+            }
+
+            .header-with-background nav ul li {
+                padding: 1rem;
+                border-bottom: 1px solid #777;
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        footer {
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-section {
+            padding: 4rem 2rem;
+            background-color: #fff;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 70px; /* Adjust for fixed header */
+            animation: sectionFadeIn 1s ease-in-out;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .about-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            color: #333;
+            animation: titleSlideIn 1s ease-out;
+        }
+
+        @keyframes titleSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .about-section h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: #007BFF;
+            margin: 0.5rem auto 0;
+            animation: underlinePulse 1.5s infinite;
+        }
+
+        @keyframes underlinePulse {
+            0%, 100% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scaleX(0.8);
+                opacity: 0.5;
+            }
+        }
+
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .image-container {
+            flex: 1;
+            max-width: 400px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: imageZoomIn 1s ease-out;
+        }
+
+        @keyframes imageZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .text-container {
+            flex: 2;
+            max-width: 600px;
+            text-align: left;
+            color: #333;
+        }
+
+        .about-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        button {
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: buttonPulse 2s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        #more-info {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .video-section-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem 1rem;
+            background-color: #fff;
+        }
+
+        .video-section {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            animation: videoFadeIn 1s ease-out;
+        }
+
+        @keyframes videoFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+
+        .video-section video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shipping-policy {
+            padding: 2rem 1rem;
+            background-color: #fff;
+            margin-top: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shipping-policy h1,
+        .shipping-policy h2 {
+            font-size: 2rem;
+            color: #007BFF;
+            margin-bottom: 1rem;
+        }
+
+        .shipping-policy p,
+        .shipping-policy ul {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .shipping-policy ul {
+            list-style-type: disc;
+            margin-left: 2rem;
+        }
+
+        .shipping-policy .contact-info {
+            margin-top: 1rem;
+        }
+
+        .shipping-policy .contact-info a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .shipping-policy .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .testimony-section {
+            margin-top: 4rem;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimony-section h2 {
+            font-size: 2.5rem;
+            color: #007BFF;
+            margin-bottom: 1rem;
+            animation: testimonyFadeIn 1s ease-out;
+        }
+
+        @keyframes testimonyFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .testimony-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .testimony-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimony-text {
+            font-size: 1.1rem;
+            color: #333;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .about-section {
+                padding: 2rem 1rem;
+            }
+            
+            .about-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-section p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-with-background">
+        <div class="container">
+            <a href="boxedHome.html" class="logo">boxedsneakz_za</a>
+            <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <nav>
+                <ul>
+                    <li><a href="boxedHome.html">Home</a></li>
+                    <li><a href="boxedCart.html">Cart</a></li>
+                    <li><a href="boxedContacts.html">Contacts</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h1>About Us</h1>
+            <div class="about-content">
+                <div class="text-container">
+                    <p>Welcome to Boxed Sneakers, established in 2021. We are dedicated to meeting our customers' needs by providing high-quality sneakers. Our amazing team works collaboratively to maintain high standards of quality and customer satisfaction. We use diverse courier services nationwide and provide free delivery via Paxi, Uber, and Aramex.</p>
+                    <button id="learn-more-btn">Learn More</button>
+                    <div id="more-info">
+                        <h2>Payment Security</h2>
+                        <p>All payments are recorded, and receipts will be provided. We aim to provide a secure payment system for our clients by offering tracking numbers for all orders.</p>
+                        
+                        <h2>Refund and Exchange Policy</h2>
+                        <p>We allow exchanges ONLY for the following reasons:</p>
+                        <ul>
+                            <li>Incorrect sneaker shipped to you (note that we read Euro sizes instead of UK sizes, but we will ensure you receive the correct Euro size that matches the UK size).</li>
+                            <li>Sneaker does not fit you (please note that some sneakers may run small or large).</li>
+                            <li>The sneaker is damaged when received from us.</li>
+                        </ul>
+                        <p>You can only exchange your sneaker for a different size, not for a different colorway or sneaker type, within 24 hours of receiving the sneakers. The sneaker MUST not have been worn.</p>
+                        <p>If you are dissatisfied with your purchase due to a defect or incorrect sizing, you may return it with the tags attached, in its original packaging, within 24 hours of receiving it. The sneakers must NOT have been worn.</p>
+                        <p>If the refund requested is not due to a damaged product or incorrect size shipped, we will charge a 15% penalty on the selling price of the sneaker. This is due to unavoidable fees incurred during the procurement of sneakers. Refunds must be requested within 24 hours of receiving the sneakers, and the sneakers must NOT have been worn.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="boxedProducts/aboutPic.jpg" alt="Sneaker Collection">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Sneaker Brand. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('learn-more-btn').addEventListener('click', function() {
+            var moreInfo = document.getElementById('more-info');
+            moreInfo.style.display = moreInfo.style.display === 'none' ? 'block' : 'none';
+            this.textContent = moreInfo.style.display === 'none' ? 'Learn More' : 'Show Less';
+        });
+
+        document.querySelector('.nav-toggle').addEventListener('click', function() {
+            document.querySelector('nav').classList.toggle('active');
+        });
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                alert('Searching for: ' + query);
+            }
+        }
+    </script>
+</body>
+</html>

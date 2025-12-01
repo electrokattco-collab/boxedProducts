@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Boxed Sneakers</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            position: relative;
+            z-index: 1000;
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .contact {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            text-align: left;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .contact-info div {
+            max-width: 300px;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+        }
+
+        .contact-info p strong {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .map {
+            width: 100%;
+            height: 300px;
+            margin-top: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        .map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .contact-form {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 2.5s ease-out;
+        }
+
+        .contact-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .contact-form button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .contact-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .social-links {
+            margin-top: 30px;
+            animation: fadeInUp 3s ease-out;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 1.5rem;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #007bff;
+        }
+
+        .video-container {
+            margin-top: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 3.5s ease-out;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            margin-top: 30px;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-form input, .contact-form textarea {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <a href="boxedHome.html" class="logo">boxed.sneakz_za</a>
+        <nav>
+            <ul>
+                <li><a href="boxedHome.html">Home</a></li>
+                <li><a href="boxedAboutUs.html">About Us</a></li>
+                <li><a href="boxedCart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="contact">
+            <h2>Contact Us</h2>
+            <p>Sneakers Shopping & Retail</p>
+            <p>Est. 2021</p>
+            <p>Online Retailer</p>
+            <p>Safe Payment</p>
+            <p>Free Efficient Delivery Nationwide</p>
+            <p>Ready to order? Use the WhatsApp link below to order.</p>
+            
+            <div class="contact-info"><!--The admin details for the busniess are entered here-->
+                <div>
+                    <p><strong>Email:</strong> <a href="boxedsneak@gmail.com">boxedsneak@gmail.com</a></p>
+                    <p><strong>Call Us:</strong> <a href="tel:+27627313073">+27627313073</a></p>
+                    <p><strong>WhatsApp:</strong> <a href="https://wa.me/c/27650947689">+27627313073</a></p>
+                    
+                </div>
+                <div>
+                    <p><strong>Opening Hours:</strong></p>
+                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                    <p>Saturday: 10:00 AM - 4:00 PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </div>
+
+            
+
+            <div class="video-container">
+                <video controls>
+                    <source src="boxedVideos/testVid.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="contact-form">
+                <h3>Send Us a Message</h3>
+                <form id="contactForm" action="https://formsubmit.co/boxedsneak@gmail.com" method="POST">
+
+    <!-- FormSubmit Settings -->
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_subject" value="New Contact Form Message">
+
+    <input type="text" id="name" name="name" placeholder="Your Name" required>
+    <input type="email" id="email" name="email" placeholder="Your Email" required>
+    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number">
+    <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+
+    <button type="submit">Send Message</button>
+</form>
+
+            </div>
+
+            <div class="social-links">
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter-square"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram-square"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Boxed Sneakers. All rights reserved.</p>
+        <p><a href="boxedPolicy.html">Terms and Conditions</a></p>
+    </footer>
+
+
+</body>
+</html>

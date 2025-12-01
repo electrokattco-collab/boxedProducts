@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart and Payment</title>
+    <!-- Include EmailJS SDK here, preferably before any custom scripts that use it -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS (often recommended to do this once)
+        (function() {
+            emailjs.init("rWMVfQhp4_IEVbHC7"); // Replace with your actual User ID
+        })();
+    </script>
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cartHeader {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #cart-container, #payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        #cart-items li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        #cart-items li:hover {
+            background-color: #f0f8ff;
+        }
+
+        #cart-items li:last-child {
+            border-bottom: none;
+        }
+
+        #checkout-button, #pay-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: buttonPulse 1s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #checkout-button:hover, #pay-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .remove-button {
+            background: none;
+            border: none;
+            color: #d9534f;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .remove-button:hover {
+            color: #c9302c;
+            text-decoration: underline;
+        }
+
+        .assurance, .tax-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        .assurance h3, .tax-info h3 {
+            margin-top: 0;
+        }
+
+        .payment-field {
+            margin-bottom: 15px;
+        }
+
+        .payment-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .payment-field p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .total-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .testimony-section {
+            margin-top: 20px;
+            animation: fadeInUp 2.5s ease-out;
+        }
+
+        .testimony-content {
+            display: flex;
+            justify-content: center;
+        }
+
+        .testimony-image {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .testimony-image:hover {
+            transform: scale(1.05);
+        }
+        .contact-links {
+          margin-top: 20px;
+          text-align: center;
+      }
+
+      .contact-links a {
+          display: inline-block;
+          margin: 10px;
+          text-decoration: none;
+          color: #007bff;
+          font-size: 18px;
+          font-weight: bold;
+          transition: color 0.3s;
+      }
+
+      .contact-links a:hover {
+          color: #0056b3;
+      }
+
+      .security-info p {
+          margin: 0;
+          font-size: 16px;
+      }
+      /* Button Styles */
+      #alert-button {
+          background-color: #007bff; /* Primary color */
+          color: white;
+          border: none;
+          border-radius: 5px;
+          padding: 10px 20px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+      }
+
+      #alert-button:hover {
+          background-color: #0056b3; /* Darker shade on hover */
+          transform: scale(1.05); /* Slightly increase size */
+      }
+
+      #alert-button:active {
+          background-color: #004080; /* Even darker shade when clicked */
+          transform: scale(0.98); /* Slightly decrease size */
+      }
+    </style>
+</head>
+<body>
+    <header class = "cartHeader">
+
+
+        
+        
+        <h1>Shopping Cart and Payment</h1>
+        <nav>
+            <a href="boxedHome.html">Home</a>
+            <a href="boxedAboutUs.html">About</a>
+            <a href="boxedCart.html">Cart</a>
+        </nav>
+        </header>
+    <main>
+        <section id="cart-container">
+            <h2>Your Cart</h2>
+            <ul id="cart-items"></ul>
+            <div id="cart-summary">
+                <p>Total: R<span id="total-price">0.00</span></p>
+                <button id="checkout-button">Proceed to Payment</button>
+            </div>
+        </section>
+        <div class="testimony-section">
+            <h2>PLEASE SEND PROOF OF PAYMENT AS SHOWN BELOW</h2>
+            <div class="testimony-content">
+                <img src="boxedProducts/testimony.jpg" alt="Customer Testimonial" class="testimony-image">
+            </div>
+        </div>
+        <section id="payment-container" style="display: none;">
+            <div class="tax-info">
+                <p>Please ensure that you send the proof of payment as provided above to the provided contact information.
+                Ensure that you include the name of the sneaker in description or reference to ensure correct delivery.
+                </p>
+            </div>
+            <h2>Payment Details</h2>
+            <div class="payment-field">
+                <label for="bank-name">Bank Name:</label>
+                <p>TymeBank</p>
+            </div>
+            <div class="payment-field">
+                <label for="branch-code">Branch Code:</label>
+                <p>678910</p>
+            </div>
+            <div class="payment-field">
+                <label for="account-number">Account Number:</label>
+                <p>53000794861</p>
+            </div>
+            <div class="payment-field">
+                <label for="account-name">Account Name:</label>
+                <p>BoxedSneaks.Za</p>
+            </div>
+            <div class="total-price" id="payment-total-price">
+                </div>
+            <button id="pay-button">Confirm Payment</button>
+            <div class="tax-info">
+                <p>All purchases are subject to Value Added Tax (VAT) in accordance with South African tax regulations. The current VAT rate is 15%, which is included in the total price displayed. This means that the total amount you pay includes VAT, and no additional tax will be added at checkout.</p>
+            </div>
+        </section>
+        <div class="contact-links">
+            <a href="https://www.instagram.com/boxed.sneaks_za/#" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://wa.me/+27650947689" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="mailto:info@boxed.sneaks.com">Email Us</a>
+        </div>
+
+        <div class="security-info">
+            <h3>Your Security is Our Priority</h3>
+            <p>At <span>boxed.sneaks_za</span>, we take your security and privacy very seriously. All payment transactions are processed through secure, encrypted channels to ensure your personal information is protected. We use the latest security measures to safeguard your data and prevent unauthorized access. Your trust is paramount to us, and we are committed to maintaining the highest standards of security for all your transactions.</p>
+        </div>
+
+        <div class="terms-conditions">
+            <h3>Terms and Conditions</h3>
+            <p>By proceeding with the payment, you agree to our terms and conditions. Please make sure you understand our return policy, payment terms, and privacy policy. For any questions, feel free to contact us.</p>
+        </div>
+        <button id="alert-button">Paid? Click ME</button>
+    </main>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartItems = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+            const checkoutButton = document.getElementById('checkout-button');
+            const paymentContainer = document.getElementById('payment-container');
+            const payButton = document.getElementById('pay-button');
+            const paymentTotalPrice = document.getElementById('payment-total-price');
+            const alertButton = document.getElementById('alert-button');
+    
+            function updateCart() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cartItems.innerHTML = '';
+                let totalPrice = 0;
+    
+                cart.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        ${item.name} - R${parseFloat(item.price).toFixed(2)} x ${parseInt(item.quantity, 10)}
+                        <button class="remove-button" data-index="${index}">Remove</button>
+                    `;
+                    cartItems.appendChild(li);
+                    // IMPROVEMENT 1: Added parseFloat and parseInt for calculation robustness
+                    totalPrice += parseFloat(item.price) * parseInt(item.quantity, 10);
+                });
+    
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+            }
+    
+            function removeItem(index) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
+    
+            cartItems.addEventListener('click', (event) => {
+                if (event.target && event.target.classList.contains('remove-button')) {
+                    const index = event.target.getAttribute('data-index');
+                    removeItem(index);
+                }
+            });
+    
+            checkoutButton.addEventListener('click', () => {
+                paymentContainer.style.display = 'block';
+                updateCart(); 
+                paymentTotalPrice.textContent = `Total Price: R${totalPriceElement.textContent}`;
+                window.scrollTo({ top: paymentContainer.offsetTop, behavior: 'smooth' });
+            });
+    
+            payButton.addEventListener('click', () => {
+                const totalPrice = totalPriceElement.textContent;
+                // NEW: Retrieve the cart list to include in the invoice
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const productList = cart.map(item => 
+                    `${parseInt(item.quantity, 10)}x ${item.name} - R${parseFloat(item.price).toFixed(2)}`
+                ).join('<br>'); // Format list with HTML line breaks for email
+
+                // IMPROVEMENT 2: Added product_list to invoiceData
+                const invoiceData = {
+                    total_price: totalPrice,
+                    bank: "TymeBank",
+                    branch: "678910",
+                    account_number: "53000794861",
+                    account_name: "BoxedSneaks.Za",
+                    date: new Date().toLocaleString(),
+                    admin_email: "electrokatt.co@gmail.com", 
+                    product_list: productList // NEW: List of ordered items
+                };
+
+                emailjs.send(
+                    "service_nb15afk",    // Service ID
+                    "template_36km6td",            // Template ID
+                    invoiceData
+                )
+                .then(() => {
+                    alert(`Payment confirmed! Invoice for R${totalPrice} has been sent. Check your inbox and remember to send Proof of Payment!`);
+                    localStorage.removeItem('cart'); 
+                    updateCart(); 
+                    paymentContainer.style.display = 'none';
+                })
+                .catch((error) => {
+                    alert("Error: Could not send invoice email. Please contact us directly via WhatsApp or Email.");
+                    console.error(error);
+                });
+            });
+    
+            // IMPROVEMENT 3: Simplified the alert message
+            alertButton.addEventListener('click', () => {
+                alert('REMINDER: PLEASE SEND PROOF OF PAYMENT (POP) TO OUR CONTACTS (Instagram, WhatsApp, or Email) LISTED above.');
+            });
+    
+            updateCart();
+        });
+    </script>
+</body>
+</html>
