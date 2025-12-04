@@ -400,7 +400,7 @@
         <article class="product" 
                  data-name="New Balance 550" 
                  data-price="1299.99" 
-                 data-images='["boxedProducts/sneaker10.jpg","boxedProducts/sneaker10a.jpg","boxedProducts/sneaker10b.jpg","boxedProducts/sneaker10c.jpg"]'>
+                 data-images='["sneaker10.jpg","sneaker10a.jpg","sneaker10b.jpg","sneaker10c.jpg"]'>
           <img src="sneaker10.jpg" alt="New Balance 550">
           <h2>New Balance 550</h2>
           <p class="price">R1299.99</p>
@@ -411,8 +411,8 @@
         <article class="product" 
                  data-name="Nike UpTempo" 
                  data-price="1899.99" 
-                 data-images=["sneaker9.jpg","boxedProducts/sneaker9a.jpg","boxedProducts/sneaker9b.jpg","boxedProducts/sneaker9c.jpg"]'>
-          <img src="boxedProducts/sneaker9.jpg" alt="Nike UpTempo">
+                 data-images='["sneaker9.jpg","sneaker9a.jpg","sneaker9b.jpg","sneaker9c.jpg"]'>
+          <img src="sneaker9.jpg" alt="Nike UpTempo">
           <h2>Nike UpTempo</h2>
           <p class="price">R1899.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -422,8 +422,8 @@
         <article class="product" 
                  data-name="Nike Dunk High" 
                  data-price="2599.99" 
-                 data-images='["boxedProducts/sneaker11.jpg","boxedProducts/sneaker11a.jpg","boxedProducts/sneaker11b.jpg","boxedProducts/sneaker11c.jpg"]'>
-          <img src="boxedProducts/sneaker11.jpg" alt="Nike Dunk High">
+                 data-images='["sneaker11.jpg","sneaker11a.jpg","sneaker11b.jpg","sneaker11c.jpg"]'>
+          <img src="sneaker11.jpg" alt="Nike Dunk High">
           <h2>Nike Dunk High</h2>
           <p class="price">R2599.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -433,8 +433,8 @@
         <article class="product" 
                  data-name="Air Jordan 4 Retro" 
                  data-price="1949.99" 
-                 data-images='["boxedProducts/sneaker12.jpg","boxedProducts/sneaker12a.jpg","boxedProducts/sneaker12b.jpg","boxedProducts/sneaker12c.jpg"]'>
-          <img src="boxedProducts/sneaker12.jpg" alt="Air Jordan 4 Retro">
+                 data-images='["sneaker12.jpg","sneaker12a.jpg","sneaker12b.jpg","sneaker12c.jpg"]'>
+          <img src="sneaker12.jpg" alt="Air Jordan 4 Retro">
           <h2>Air Jordan 4 Retro</h2>
           <p class="price">R1949.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -444,8 +444,8 @@
         <article class="product" 
                  data-name="PUMA Mayze WMNS" 
                  data-price="1399.99" 
-                 data-images='["boxedProducts/sneaker13.jpg","boxedProducts/sneaker13a.jpg","boxedProducts/sneaker13b.jpg","boxedProducts/sneaker13c.jpg"]'>
-          <img src="boxedProducts/sneaker13.jpg" alt="PUMA Mayze WMNS">
+                 data-images='["sneaker13.jpg","sneaker13a.jpg","sneaker13b.jpg","sneaker13c.jpg"]'>
+          <img src="sneaker13.jpg" alt="PUMA Mayze WMNS">
           <h2>PUMA Mayze WMNS</h2>
           <p class="price">R1399.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -455,8 +455,8 @@
         <article class="product" 
                  data-name="Timberland Boots" 
                  data-price="2799.99" 
-                 data-images='["boxedProducts/sneaker16.jpg","boxedProducts/sneaker16a.jpg","boxedProducts/sneaker16b.jpg","boxedProducts/sneaker16c.jpg"]'>
-          <img src="boxedProducts/sneaker16.jpg" alt="Timberland Boots">
+                 data-images='["sneaker16.jpg","sneaker16a.jpg","sneaker16b.jpg","sneaker16c.jpg"]'>
+          <img src="sneaker16.jpg" alt="Timberland Boots">
           <h2>Timberland Boots</h2>
           <p class="price">R2799.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -466,8 +466,8 @@
         <article class="product" 
                  data-name="Airmax 95" 
                  data-price="1599.99" 
-                 data-images='["boxedProducts/sneaker14.jpg","boxedProducts/sneaker14a.jpg","boxedProducts/sneaker14b.jpg","boxedProducts/sneaker14c.jpg"]'>
-          <img src="boxedProducts/sneaker14.jpg" alt="Airmax 95">
+                 data-images='["sneaker14.jpg","sneaker14a.jpg","sneaker14b.jpg","sneaker14c.jpg"]'>
+          <img src="sneaker14.jpg" alt="Airmax 95">
           <h2>Airmax 95</h2>
           <p class="price">R1599.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -477,8 +477,8 @@
         <article class="product" 
                  data-name="Vans Old Skool" 
                  data-price="1099.99" 
-                 data-images='["boxedProducts/sneaker15.jpg","boxedProducts/sneaker15a.jpg","boxedProducts/sneaker15b.jpg","boxedProducts/sneaker15c.jpg"]'>
-          <img src="boxedProducts/sneaker15.jpg" alt="Vans Old Skool">
+                 data-images='["sneaker15.jpg","sneaker15a.jpg","sneaker15b.jpg","sneaker15c.jpg"]'>
+          <img src="sneaker15.jpg" alt="Vans Old Skool">
           <h2>Vans Old Skool</h2>
           <p class="price">R1099.99</p>
           <p class="description">Free Delivery Nationwide</p>
@@ -494,51 +494,28 @@
     <script>
       let currentImageIndex = 0;
       
-      /**
-       * Opens the product modal and populates it with product details.
-       * @param {HTMLElement} productElement - The DOM element of the clicked product.
-       */
       function openModal(productElement) {
-          // Parse the JSON string from the data-images attribute to get the image array.
           const images = JSON.parse(productElement.dataset.images);
           currentImageIndex = 0; // Reset image index for the new product
-          // Set modal title and initial image source
           document.getElementById('modalTitle').innerText = productElement.dataset.name;
           document.getElementById('modalImage').src = images[currentImageIndex];
-          // Display the modal
           document.getElementById('productModal').style.display = 'block';
       }
       
-      /**
-       * Closes the product modal.
-       */
       function closeModal() {
           document.getElementById('productModal').style.display = 'none';
       }
-      
-      /**
-       * Changes the image displayed in the modal (for image gallery functionality).
-       * @param {number} direction - 1 for next image, -1 for previous image.
-       */
+     
       function changeImage(direction) {
-          // Find the product element based on the current modal title
           const productElement = document.querySelector('.product[data-name="' + document.getElementById('modalTitle').innerText + '"]');
           const images = JSON.parse(productElement.dataset.images);
           
-          // Calculate the new image index, wrapping around using the modulo operator
           currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
           
-          // Update the modal image source
+  
           document.getElementById('modalImage').src = images[currentImageIndex];
       }
       
-      // Note: There are three identical addToCart functions. Consolidating them into one final version.
-      /**
-       * Adds a product to the cart stored in localStorage.
-       * @param {string} name - The name of the product.
-       * @param {number} price - The price of the product.
-       * @param {number} quantity - The quantity to add (typically 1).
-       */
       function addToCart(name, price, quantity) {
           const productElement = document.querySelector(`.product[data-name="${name}"]`);
           if (!productElement) {
@@ -559,7 +536,7 @@
               cart.push({ name, price, quantity });
           }
           
-          // Save the updated cart back to localStorage
+  
           localStorage.setItem('cart', JSON.stringify(cart));
           alert('Item added to cart');
       }
@@ -572,16 +549,12 @@
           window.location.href = 'boxedCart.html';
       }
       
-      /**
-       * Filters products based on the search input value.
-       */
       function performSearch() {
           const query = document.getElementById('searchInput').value.toLowerCase();
           const products = document.querySelectorAll('.product');
           
           products.forEach(product => {
               const productName = product.querySelector('h2').innerText.toLowerCase();
-              // Show product if its name includes the search query, otherwise hide it
               if (productName.includes(query)) {
                   product.style.display = 'block';
               } else {
@@ -590,10 +563,8 @@
           });
       }
       
-      // Event listeners for product clicks: when a product card is clicked, open the modal.
       document.querySelectorAll('.product').forEach(product => {
           product.addEventListener('click', (event) => {
-              // Prevent modal opening if a child element (like the 'Add to Bag' button) was clicked
               if (event.target.tagName.toLowerCase() !== 'button') {
                   openModal(product);
               }
@@ -602,7 +573,3 @@
     </script>
   </body>
 </html>
-
-
-
-
