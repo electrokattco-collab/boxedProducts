@@ -1,682 +1,988 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart and Payment</title>
-    <!-- Include EmailJS SDK here, preferably before any custom scripts that use it -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        // Initialize EmailJS (often recommended to do this once)
-        (function() {
-            emailjs.init("rWMVfQhp4_IEVbHC7"); // Replace with your actual User ID
-        })();
-    </script>
-    <style>
-        /* Base styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(180deg, #eef2f7 0%, #f9fafb 100%);
-            animation: fadeIn 1s ease-out;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart & Payment · boxedsneakz_za</title>
+  <meta name="description" content="Review your sneaker cart, adjust quantities, and complete payment details on a mobile-friendly checkout page.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    :root{
+      --bg-dark:rgba(10,15,25,0.78);
+      --nav-bg:rgba(255,255,255,0.05);
+      --card-bg:rgba(255,255,255,0.88);
+      --text-main:#1e1e2a;
+      --text-soft:#586883;
+      --accent:#ff7e3f;
+      --accent-strong:#ff7518;
+      --accent-light:#fff1e8;
+      --primary:#0f1a2c;
+      --primary-soft:#1f2b48;
+      --success:#0f3b2c;
+      --danger:#c23b22;
+      --danger-soft:#ffe4dc;
+      --muted:#eef2ff;
+      --shadow-lg:0 20px 40px rgba(0,0,0,0.12);
+      --shadow-md:0 14px 26px rgba(0,0,0,0.08);
+      --radius-xl:40px;
+      --radius-lg:28px;
+      --radius-md:22px;
+      --radius-pill:999px;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
 
-        .cartHeader {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            animation: slideIn 1s ease-out;
-        }
+    html{scroll-behavior:smooth;}
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    body{
+      background:
+        radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
+        url('back.jpg');
+      background-size:cover;
+      background-attachment:fixed;
+      min-height:100vh;
+      color:var(--text-main);
+      padding-bottom:34px;
+    }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 8px;
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 12px;
-            border-radius: 999px;
-            transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
-        }
+    a, button{
+      -webkit-tap-highlight-color:transparent;
+    }
 
-        nav a:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.10);
-            transform: translateY(-1px);
-        }
+    .wrapper{
+      max-width:1150px;
+      margin:0 auto;
+      padding:20px 24px;
+    }
 
-        main {
-            padding: 20px;
-            text-align: center;
-        }
+    .glass-header{
+      background:var(--bg-dark);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border-radius:48px;
+      padding:14px 18px 14px 28px;
+      margin-bottom:28px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      box-shadow:0 20px 40px rgba(0,0,0,0.22);
+    }
 
-        #cart-container, #payment-container {
-            max-width: 900px;
-            margin: 0 auto 24px;
-            padding: 24px;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            background-color: #fff;
-            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
-            animation: fadeInUp 1.5s ease-out;
-        }
+    .logo{
+      font-size:2rem;
+      font-weight:700;
+      letter-spacing:-0.5px;
+      background:linear-gradient(135deg,#fff,#ffe3b0);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-decoration:none;
+      white-space:nowrap;
+    }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .logo i{
+      color:var(--accent);
+      margin-right:6px;
+    }
 
-        #cart-items {
-            list-style: none;
-            padding: 0;
-        }
+    .nav-links{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
 
-        #cart-items li {
-            display: block;
-            padding: 0;
-            border-bottom: none;
-            margin-bottom: 14px;
-            transition: background-color 0.3s ease;
-        }
+    .nav-links a{
+      color:#f0f3fa;
+      text-decoration:none;
+      font-weight:500;
+      padding:11px 18px;
+      border-radius:var(--radius-pill);
+      background:var(--nav-bg);
+      transition:all 0.25s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:44px;
+    }
 
-        .cart-item-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 18px;
-            border: 1px solid #edf0f4;
-            border-radius: 16px;
-            background: #fbfdff;
-            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
-        }
+    .nav-links a:hover,
+    .nav-links a:focus-visible{
+      background:rgba(255,140,60,0.25);
+      transform:translateY(-2px);
+      color:#fff;
+      outline:none;
+    }
 
-        .cart-item-card:hover {
-            background-color: #f0f8ff;
-            transform: translateY(-2px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
-        }
+    .cart-link{
+      position:relative;
+      padding-right:44px !important;
+    }
 
-        .cart-item-image {
-            width: 84px;
-            height: 84px;
-            object-fit: cover;
-            border-radius: 12px;
-            flex-shrink: 0;
-        }
+    .cart-badge{
+      position:absolute;
+      top:7px;
+      right:10px;
+      min-width:22px;
+      height:22px;
+      padding:0 6px;
+      border-radius:999px;
+      background:#ff6b35;
+      color:#fff;
+      font-size:0.72rem;
+      font-weight:800;
+      display:grid;
+      place-items:center;
+      line-height:1;
+      box-shadow:0 8px 16px rgba(255,107,53,0.35);
+    }
 
-        .cart-item-info {
-            flex: 1;
-            text-align: left;
-        }
+    .page-intro{
+      text-align:center;
+      margin:10px auto 24px;
+      max-width:760px;
+    }
 
-        .cart-item-info strong {
-            display: block;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-            color: #111827;
-        }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.88rem;
+      font-weight:700;
+      color:#20304f;
+      background:rgba(255,255,255,0.65);
+      border:1px solid rgba(255,255,255,0.75);
+      border-radius:var(--radius-pill);
+      padding:8px 14px;
+      margin-bottom:14px;
+      box-shadow:0 8px 18px rgba(0,0,0,0.06);
+    }
 
-        .cart-item-meta {
-            color: #4b5563;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
+    .page-intro h1{
+      font-size:clamp(2rem, 5vw, 3rem);
+      line-height:1.05;
+      margin-bottom:10px;
+      letter-spacing:-1px;
+      background:linear-gradient(to right,#1e293b,#2d3b5e);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
 
-        .cart-item-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: stretch;
-            min-width: 82px;
-        }
+    .page-intro p{
+      color:#2b3b5c;
+      font-weight:500;
+      font-size:1rem;
+    }
 
-        #cart-items li:last-child {
-            border-bottom: none;
-        }
+    .checkout-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(320px,0.75fr);
+      gap:22px;
+      align-items:start;
+    }
 
-        #checkout-button, #pay-button {
-            padding: 12px 20px;
-            border: none;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            cursor: pointer;
-            border-radius: 999px;
-            margin-top: 10px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.2s ease;
-            animation: buttonPulse 1s infinite;
-        }
+    .section-card{
+      background:var(--card-bg);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-radius:var(--radius-xl);
+      padding:28px;
+      box-shadow:var(--shadow-lg);
+      border:1px solid rgba(255,255,255,0.75);
+      margin-bottom:22px;
+    }
 
-        #checkout-button.loading, #pay-button.loading {
-            opacity: 0.75;
-            cursor: wait;
-        }
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:18px;
+      font-size:1.45rem;
+    }
 
-        @keyframes buttonPulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+    .cart-summary-strip{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:18px;
+    }
 
-        #checkout-button:hover, #pay-button:hover {
-            background-color: #0056b3;
-            transform: scale(1.1);
-        }
+    .summary-pill{
+      background:rgba(255,255,255,0.72);
+      border:1px solid rgba(12,32,58,0.08);
+      border-radius:var(--radius-pill);
+      padding:10px 14px;
+      color:#29405f;
+      font-weight:700;
+      box-shadow:0 8px 18px rgba(0,0,0,0.04);
+    }
 
-        .remove-button {
-            background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: #d9534f;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-        }
+    .cart-list{
+      display:grid;
+      gap:14px;
+    }
 
-        .remove-button:hover {
-            color: #c9302c;
-            background: #ffe4e6;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(217, 83, 79, 0.12);
-        }
+    .cart-item-row{
+      display:grid;
+      grid-template-columns:88px minmax(0,1fr) auto;
+      align-items:center;
+      gap:16px;
+      background:#fff;
+      border-radius:26px;
+      padding:16px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.04);
+      border:1px solid rgba(12,32,58,0.05);
+      transition:transform 0.22s ease, box-shadow 0.22s ease;
+    }
 
-        .qty-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            min-width: 64px;
-            transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-        }
+    .cart-item-row:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-md);
+    }
 
-        .qty-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(0, 86, 179, 0.18);
-        }
+    .cart-item-img{
+      width:88px;
+      height:88px;
+      border-radius:20px;
+      object-fit:cover;
+      background:#edf2fb;
+    }
 
-        .cart-empty {
-            padding: 30px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 16px;
-            background: #f8fafc;
-            color: #475569;
-            font-weight: bold;
-        }
+    .cart-item-info{
+      min-width:0;
+    }
 
-        .summary-box {
-            margin-top: 20px;
-            padding: 22px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            text-align: center;
-        }
+    .cart-item-title{
+      font-size:1.08rem;
+      font-weight:800;
+      margin-bottom:6px;
+    }
 
-        #cart-summary p {
-            margin: 0 0 14px;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
+    .cart-item-sub{
+      color:var(--text-soft);
+      font-size:0.93rem;
+      margin-bottom:8px;
+    }
 
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .item-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
 
-        .toast {
-            background: #111827;
-            color: #fff;
-            padding: 14px 18px;
-            border-radius: 12px;
-            min-width: 240px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
-            opacity: 0;
-            transform: translateY(-10px);
-            animation: toastIn 0.25s ease forwards;
-        }
+    .meta-pill{
+      background:#eff4ff;
+      color:#244269;
+      font-size:0.82rem;
+      font-weight:700;
+      padding:7px 10px;
+      border-radius:var(--radius-pill);
+    }
 
-        .toast.success {
-            border-left: 4px solid #22c55e;
-        }
+    .cart-controls{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:10px;
+    }
 
-        .toast.info {
-            border-left: 4px solid #3b82f6;
-        }
+    .qty-wrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:#f8faff;
+      padding:8px 10px;
+      border-radius:var(--radius-pill);
+      border:1px solid rgba(12,32,58,0.06);
+    }
 
-        @keyframes toastIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .qty-btn{
+      background:var(--muted);
+      border:none;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      font-weight:800;
+      font-size:1.1rem;
+      cursor:pointer;
+      transition:all 0.22s ease;
+      color:#21344f;
+    }
 
-        @media (max-width: 768px) {
-            .cart-item-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+    .qty-btn:hover,
+    .qty-btn:focus-visible{
+      background:#dbe4ff;
+      transform:translateY(-1px);
+      outline:none;
+    }
 
-            .cart-item-image {
-                width: 100%;
-                height: 180px;
-            }
+    .qty-value{
+      min-width:18px;
+      text-align:center;
+      font-weight:800;
+      color:#20304f;
+    }
 
-            .cart-item-actions {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-        }
+    .remove-btn{
+      background:none;
+      border:1px solid #ffcdc0;
+      color:var(--danger);
+      padding:9px 14px;
+      border-radius:var(--radius-pill);
+      cursor:pointer;
+      font-weight:700;
+      transition:all 0.22s ease;
+    }
 
-        .assurance, .tax-info {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: left;
-            animation: fadeInUp 2s ease-out;
-        }
+    .remove-btn:hover,
+    .remove-btn:focus-visible{
+      background:var(--danger-soft);
+      border-color:#ff9c85;
+      transform:translateY(-1px);
+      outline:none;
+    }
 
-        .assurance h3, .tax-info h3 {
-            margin-top: 0;
-        }
+    .empty-state{
+      text-align:center;
+      padding:28px 18px;
+      background:#f7faff;
+      border-radius:30px;
+      border:1px dashed #d7deeb;
+      color:#3f5676;
+    }
 
-        .payment-field {
-            margin-bottom: 15px;
-        }
+    .empty-state h3{
+      margin-bottom:8px;
+      font-size:1.2rem;
+    }
 
-        .payment-field label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    .cart-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:20px;
+    }
 
-        .payment-field p {
-            font-size: 16px;
-            margin: 5px 0;
-        }
+    .action-btn{
+      background:var(--primary);
+      color:#fff;
+      padding:14px 22px;
+      border-radius:var(--radius-pill);
+      font-weight:700;
+      border:none;
+      font-size:1rem;
+      cursor:pointer;
+      transition:all 0.22s ease;
+      min-height:48px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
 
-        .total-price {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-            color: #333;
-        }
+    .action-btn:hover,
+    .action-btn:focus-visible{
+      background:var(--accent-strong);
+      transform:translateY(-2px);
+      outline:none;
+    }
 
-        .testimony-section {
-            margin-top: 20px;
-            animation: fadeInUp 2.5s ease-out;
-        }
+    .secondary-btn{
+      background:#4a5c72;
+    }
 
-        .testimony-content {
-            display: flex;
-            justify-content: center;
-        }
+    .secondary-btn:hover,
+    .secondary-btn:focus-visible{
+      background:#5d718a;
+    }
 
-        .testimony-image {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
+    .checkout-panel{
+      position:sticky;
+      top:18px;
+    }
 
-        .testimony-image:hover {
-            transform: scale(1.05);
-        }
-        .contact-links {
-          margin-top: 20px;
-          text-align: center;
+    .total-card{
+      background:#0f1a2c;
+      color:#fff;
+      border-radius:30px;
+      padding:22px;
+      box-shadow:0 18px 30px rgba(15,26,44,0.22);
+      margin-bottom:18px;
+    }
+
+    .total-label{
+      color:#cfd8ea;
+      font-size:0.92rem;
+      margin-bottom:8px;
+    }
+
+    .total-amount{
+      font-size:2.1rem;
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .mini-points{
+      display:grid;
+      gap:10px;
+      color:#e8eefb;
+      font-size:0.92rem;
+    }
+
+    .mini-points div{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .mini-points i{
+      color:#ffb27e;
+      margin-top:3px;
+    }
+
+    .payment-card{
+      background:rgba(255,255,255,0.78);
+      border-radius:30px;
+      padding:22px;
+      border:1px solid rgba(12,32,58,0.06);
+      box-shadow:0 12px 24px rgba(0,0,0,0.06);
+    }
+
+    .bank-detail{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px 16px;
+      font-size:0.98rem;
+      margin:16px 0;
+      align-items:start;
+    }
+
+    .bank-detail span:nth-child(odd){
+      color:#60708d;
+      font-weight:700;
+    }
+
+    .payment-total{
+      font-size:1.25rem;
+      font-weight:900;
+      color:#12345b;
+      margin:18px 0 16px;
+      padding:14px 16px;
+      background:#eff5ff;
+      border-radius:20px;
+    }
+
+    .proof-card{
+      background:#f4f0fa;
+      border-radius:24px;
+      padding:18px;
+      margin:18px 0;
+    }
+
+    .proof-card p{
+      color:#324565;
+      margin-bottom:10px;
+    }
+
+    .proof-card img{
+      max-width:220px;
+      width:100%;
+      border-radius:20px;
+      display:block;
+    }
+
+    .contact-links{
+      display:grid;
+      gap:10px;
+      margin:18px 0;
+    }
+
+    .contact-links a{
+      background:#1e293b;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:18px;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:700;
+      transition:all 0.22s ease;
+      min-height:46px;
+    }
+
+    .contact-links a:hover,
+    .contact-links a:focus-visible{
+      background:#31445e;
+      transform:translateY(-1px);
+      outline:none;
+    }
+
+    .secure-note{
+      margin-top:16px;
+      color:var(--text-soft);
+      font-size:0.92rem;
+    }
+
+    .mobile-checkout-bar{
+      display:none;
+      position:sticky;
+      bottom:12px;
+      z-index:18;
+      margin-top:10px;
+    }
+
+    .mobile-checkout-inner{
+      background:rgba(11,22,34,0.92);
+      backdrop-filter:blur(10px);
+      border-radius:22px;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow:0 18px 30px rgba(0,0,0,0.18);
+    }
+
+    .mobile-total{
+      color:#fff;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .mobile-total small{
+      display:block;
+      color:#cfd8ea;
+      font-weight:600;
+      font-size:0.76rem;
+    }
+
+    .mobile-pay-btn{
+      background:var(--accent-strong);
+      color:#fff;
+      text-decoration:none;
+      border-radius:16px;
+      padding:12px 14px;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+
+    .toast-container{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      z-index:9999;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .toast{
+      background:#0b1622;
+      color:#fff;
+      padding:14px 20px;
+      border-radius:var(--radius-pill);
+      border-left:6px solid #22c55e;
+      box-shadow:0 18px 30px rgba(0,0,0,0.25);
+      max-width:320px;
+      font-weight:600;
+      animation:slideIn 0.2s ease-out;
+    }
+
+    @keyframes slideIn{
+      from{opacity:0; transform:translateX(24px);}
+      to{opacity:1; transform:translateX(0);}
+    }
+
+    @media (max-width: 960px){
+      .checkout-layout{
+        grid-template-columns:1fr;
       }
 
-      .contact-links a {
-          display: inline-block;
-          margin: 10px;
-          text-decoration: none;
-          color: #007bff;
-          font-size: 18px;
-          font-weight: bold;
-          transition: color 0.3s;
+      .checkout-panel{
+        position:static;
+      }
+    }
+
+    @media (max-width: 768px){
+      body{
+        background-attachment:scroll;
       }
 
-      .contact-links a:hover {
-          color: #0056b3;
+      .wrapper{
+        padding:16px;
       }
 
-      .security-info p {
-          margin: 0;
-          font-size: 16px;
-      }
-      /* Button Styles */
-      #alert-button {
-          background-color: #007bff; /* Primary color */
-          color: white;
-          border: none;
-          border-radius: 5px;
-          padding: 10px 20px;
-          font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s, transform 0.2s;
+      .glass-header{
+        flex-direction:column;
+        align-items:stretch;
+        gap:12px;
+        border-radius:30px;
+        padding:16px;
       }
 
-      #alert-button:hover {
-          background-color: #0056b3; /* Darker shade on hover */
-          transform: scale(1.05); /* Slightly increase size */
+      .logo{
+        font-size:1.7rem;
+        text-align:center;
       }
 
-      #alert-button:active {
-          background-color: #004080; /* Even darker shade when clicked */
-          transform: scale(0.98); /* Slightly decrease size */
+      .nav-links{
+        justify-content:center;
       }
-    </style>
+
+      .nav-links a{
+        flex:1 1 calc(50% - 8px);
+        justify-content:center;
+        min-width:140px;
+      }
+
+      .section-card{
+        padding:20px;
+        border-radius:30px;
+      }
+
+      .cart-item-row{
+        grid-template-columns:1fr;
+        justify-items:start;
+      }
+
+      .cart-item-img{
+        width:100%;
+        height:auto;
+        aspect-ratio:1/1;
+        max-width:120px;
+      }
+
+      .cart-controls{
+        width:100%;
+        align-items:stretch;
+      }
+
+      .qty-wrap{
+        justify-content:center;
+        width:100%;
+      }
+
+      .remove-btn{
+        width:100%;
+      }
+
+      .cart-actions{
+        flex-direction:column;
+      }
+
+      .cart-actions .action-btn{
+        width:100%;
+      }
+
+      .mobile-checkout-bar{
+        display:block;
+      }
+
+      .toast-container{
+        left:16px;
+        right:16px;
+        bottom:16px;
+      }
+
+      .toast{
+        max-width:none;
+      }
+    }
+
+    @media (max-width: 480px){
+      .nav-links a{
+        flex:1 1 100%;
+      }
+
+      .proof-card img{
+        max-width:100%;
+      }
+
+      .mobile-checkout-inner{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .mobile-pay-btn{
+        justify-content:center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class = "cartHeader">
+<div class="wrapper">
+  <header class="glass-header">
+    <a href="index.html" class="logo"><i class="fas fa-shoe-prints"></i> boxedsneakz_za</a>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="boxedCart.html" class="cart-link"><i class="fas fa-shopping-bag"></i> Cart <span id="cartCountDisplay" class="cart-badge">0</span></a>
+      <a href="boxedContacts.html"><i class="fas fa-address-book"></i> Contact</a>
+    </div>
+  </header>
 
+  <section class="page-intro">
+    <div class="eyebrow"><i class="fas fa-lock"></i> Secure checkout flow with easy mobile actions</div>
+    <h1>Your bag is ready.</h1>
+    <p>Review your sneakers, update quantities, and complete payment using the details below.</p>
+  </section>
 
-        
-        
-        <h1>Shopping Cart and Payment</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="boxedAboutUs.html">About</a>
-            <a href="boxedCart.html">Cart</a>
-        </nav>
-        </header>
-    <div class="toast-container" id="toast-container"></div>
+  <div class="checkout-layout">
     <main>
-        <section id="cart-container">
-            <h2>Your Cart</h2>
-            <ul id="cart-items"></ul>
-            <div id="cart-summary" class="summary-box">
-                <p>Total: R<span id="total-price">0.00</span></p>
-                <button id="checkout-button">Proceed to Payment</button>
-            </div>
-        </section>
-        <div class="testimony-section">
-            <h2>PLEASE SEND PROOF OF PAYMENT AS SHOWN BELOW</h2>
-            <div class="testimony-content">
-                <img src="testimony.jpg" alt="Customer Testimonial" class="testimony-image">
-            </div>
-        </div>
-        <section id="payment-container" style="display: none;">
-            <div class="tax-info">
-                <p>Please ensure that you send the proof of payment as provided above to the provided contact information.
-                Ensure that you include the name of the sneaker in description or reference to ensure correct delivery.
-                </p>
-            </div>
-            <h2>Payment Details</h2>
-            <div class="payment-field">
-                <label for="bank-name">Bank Name:</label>
-                <p>TymeBank</p>
-            </div>
-            <div class="payment-field">
-                <label for="branch-code">Branch Code:</label>
-                <p>678910</p>
-            </div>
-            <div class="payment-field">
-                <label for="account-number">Account Number:</label>
-                <p>53000794861</p>
-            </div>
-            <div class="payment-field">
-                <label for="account-name">Account Name:</label>
-                <p>BoxedSneaks.Za</p>
-            </div>
-            <div class="total-price" id="payment-total-price">
-                </div>
-            <button id="pay-button">Confirm Payment</button>
-            <div class="tax-info">
-                <p>All purchases are subject to Value Added Tax (VAT) in accordance with South African tax regulations. The current VAT rate is 15%, which is included in the total price displayed. This means that the total amount you pay includes VAT, and no additional tax will be added at checkout.</p>
-            </div>
-        </section>
-        <div class="contact-links">
-            <a href="https://www.instagram.com/boxed.sneaks_za/#" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://wa.me/+27650947689" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <a href="mailto:ppesiekatlego88@gmail.com" target = "_blank"> Email Us</a>
+      <section class="section-card">
+        <h2 class="section-title"><i class="fas fa-shopping-bag"></i> Your cart</h2>
+
+        <div class="cart-summary-strip">
+          <div class="summary-pill">Items in bag: <span id="itemCountSummary">0</span></div>
+          <div class="summary-pill">Ready for checkout</div>
         </div>
 
-        <div class="security-info">
-            <h3>Your Security is Our Priority</h3>
-            <p>At <span>boxed.sneaks_za</span>, we take your security and privacy very seriously. All payment transactions are processed through secure, encrypted channels to ensure your personal information is protected. We use the latest security measures to safeguard your data and prevent unauthorized access. Your trust is paramount to us, and we are committed to maintaining the highest standards of security for all your transactions.</p>
-        </div>
+        <div id="cartItemsList" class="cart-list"></div>
 
-        <div class="terms-conditions">
-            <h3>Terms and Conditions</h3>
-            <p>By proceeding with the payment, you agree to our terms and conditions. Please make sure you understand our return policy, payment terms, and privacy policy. For any questions, feel free to contact us.</p>
+        <div class="cart-actions">
+          <button class="action-btn" id="proceedPaymentBtn"><i class="fas fa-arrow-down"></i> Proceed to payment</button>
+          <button class="action-btn secondary-btn" id="clearCartBtn"><i class="fas fa-trash"></i> Clear cart</button>
         </div>
-        <button id="alert-button">Paid??Click ME</button>
+      </section>
     </main>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            const cartItems = document.getElementById('cart-items');
-            const totalPriceElement = document.getElementById('total-price');
-            const checkoutButton = document.getElementById('checkout-button');
-            const paymentContainer = document.getElementById('payment-container');
-            const payButton = document.getElementById('pay-button');
-            const paymentTotalPrice = document.getElementById('payment-total-price');
-            const alertButton = document.getElementById('alert-button');
-    
-            function showToast(message, type = 'info') {
-                const toastContainer = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
-                toastContainer.appendChild(toast);
 
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateY(-10px)';
-                    setTimeout(() => toast.remove(), 250);
-                }, 2200);
+    <aside class="checkout-panel">
+      <div class="total-card">
+        <div class="total-label">Current total</div>
+        <div class="total-amount">R <span id="cartTotal">0.00</span></div>
+        <div class="mini-points">
+          <div><i class="fas fa-check-circle"></i><span>Free delivery nationwide</span></div>
+          <div><i class="fas fa-check-circle"></i><span>Adjust quantities before payment</span></div>
+          <div><i class="fas fa-check-circle"></i><span>Send proof of payment after transfer</span></div>
+        </div>
+      </div>
+
+      <section id="paymentSection" class="payment-card">
+        <h2 class="section-title"><i class="fas fa-building-columns"></i> Banking details</h2>
+
+        <div class="bank-detail">
+          <span>🏦 Bank</span><span><strong>TymeBank</strong></span>
+          <span>🌿 Branch</span><span>678910</span>
+          <span>🔢 Account</span><span>53000794861</span>
+          <span>📛 Name</span><span>BoxedSneaks.Za</span>
+        </div>
+
+        <div class="payment-total">Total to pay: R <span id="finalTotal">0.00</span></div>
+
+        <div class="proof-card">
+          <p><i class="fas fa-receipt"></i> <strong>Send proof of payment</strong> after you transfer using the contact options below.</p>
+          <img src="testimony.jpg" alt="Proof of payment example">
+        </div>
+
+        <div class="contact-links">
+          <a href="https://www.instagram.com/boxed.sneaks_za/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="https://wa.me/27650947689" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="mailto:boxedsneak@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+        </div>
+
+        <button class="action-btn" id="confirmPaymentBtn" style="background:#0f3b2c; width:100%;"><i class="fas fa-check-circle"></i> I've paid – send invoice</button>
+        <p class="secure-note">🔒 Secure · VAT inclusive · Invoice sent after confirmation</p>
+      </section>
+    </aside>
+  </div>
+
+  <div class="mobile-checkout-bar">
+    <div class="mobile-checkout-inner">
+      <div class="mobile-total"><small>Total</small>R <span id="mobileTotal">0.00</span></div>
+      <a href="#paymentSection" class="mobile-pay-btn"><i class="fas fa-credit-card"></i> Pay now</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  (function(){
+    emailjs.init("rWMVfQhp4_IEVbHC7");
+
+    let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
+
+    const cartItemsDiv = document.getElementById('cartItemsList');
+    const cartTotalSpan = document.getElementById('cartTotal');
+    const finalTotalSpan = document.getElementById('finalTotal');
+    const mobileTotalSpan = document.getElementById('mobileTotal');
+    const cartCountSpan = document.getElementById('cartCountDisplay');
+    const itemCountSummary = document.getElementById('itemCountSummary');
+    const toastContainer = document.getElementById('toastContainer');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const proceedPaymentBtn = document.getElementById('proceedPaymentBtn');
+    const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+
+    function showToast(message) {
+      if (!toastContainer) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 2600);
+    }
+
+    function saveCart() {
+      localStorage.setItem('sneakerCart', JSON.stringify(cart));
+    }
+
+    function updateCounts(total, count) {
+      cartTotalSpan.textContent = total.toFixed(2);
+      finalTotalSpan.textContent = total.toFixed(2);
+      mobileTotalSpan.textContent = total.toFixed(2);
+      cartCountSpan.textContent = count;
+      itemCountSummary.textContent = count;
+    }
+
+    function renderCart() {
+      if (!cart.length) {
+        cartItemsDiv.innerHTML = `
+          <div class="empty-state">
+            <h3>Your cart is empty</h3>
+            <p>Add your favourite sneakers from the home page to get started.</p>
+          </div>
+        `;
+        updateCounts(0, 0);
+        return;
+      }
+
+      let total = 0;
+      let count = 0;
+      let html = '';
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        count += item.quantity;
+
+        html += `
+          <article class="cart-item-row">
+            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='sneaker1.jpg'">
+            <div class="cart-item-info">
+              <div class="cart-item-title">${item.name}</div>
+              <div class="cart-item-sub">Premium sneaker selected for checkout</div>
+              <div class="item-meta">
+                <span class="meta-pill">R ${item.price.toFixed(2)} each</span>
+                <span class="meta-pill">Subtotal: R ${itemTotal.toFixed(2)}</span>
+              </div>
+            </div>
+            <div class="cart-controls">
+              <div class="qty-wrap">
+                <button class="qty-btn" type="button" data-index="${index}" data-action="dec">−</button>
+                <span class="qty-value">${item.quantity}</span>
+                <button class="qty-btn" type="button" data-index="${index}" data-action="inc">+</button>
+              </div>
+              <button class="remove-btn" type="button" data-index="${index}"><i class="fas fa-trash"></i> Remove</button>
+            </div>
+          </article>
+        `;
+      });
+
+      cartItemsDiv.innerHTML = html;
+      updateCounts(total, count);
+
+      document.querySelectorAll('.qty-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const index = Number(event.currentTarget.dataset.index);
+          const action = event.currentTarget.dataset.action;
+
+          if (action === 'inc') {
+            cart[index].quantity += 1;
+          } else {
+            cart[index].quantity -= 1;
+            if (cart[index].quantity <= 0) {
+              const removedName = cart[index].name;
+              cart.splice(index, 1);
+              saveCart();
+              renderCart();
+              showToast(removedName + ' removed');
+              return;
             }
+          }
 
-            function updateCart() {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cartItems.innerHTML = '';
-                let totalPrice = 0;
-
-                if (cart.length === 0) {
-                    cartItems.innerHTML = '<li><div class="cart-empty">Your cart is empty. Add something fresh from the home page.</div></li>';
-                    totalPriceElement.textContent = '0.00';
-                    checkoutButton.style.display = 'none';
-                    paymentContainer.style.display = 'none';
-                    return;
-                }
-
-                checkoutButton.style.display = 'inline-block';
-
-                cart.forEach((item, index) => {
-                    const itemTotal = parseFloat(item.price) * parseInt(item.quantity, 10);
-                    totalPrice += itemTotal;
-
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <div class="cart-item-card">
-                            <img src="${item.image || 'head.jpg'}" alt="${item.name}" class="cart-item-image">
-                            <div class="cart-item-info">
-                                <strong>${item.name}</strong>
-                                <div class="cart-item-meta">
-                                    <div>Price: R${parseFloat(item.price).toFixed(2)}</div>
-                                    <div>Quantity: ${parseInt(item.quantity, 10)}</div>
-                                    <div>Item Total: <strong>R${itemTotal.toFixed(2)}</strong></div>
-                                </div>
-                            </div>
-                            <div class="cart-item-actions">
-                                <button class="qty-btn" data-index="${index}" data-action="increase">+</button>
-                                <button class="qty-btn" data-index="${index}" data-action="decrease">−</button>
-                                <button class="remove-button" data-index="${index}">Remove</button>
-                            </div>
-                        </div>
-                    `;
-                    cartItems.appendChild(li);
-                });
-
-                totalPriceElement.textContent = totalPrice.toFixed(2);
-            }
-    
-            function removeItem(index) {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const removedItem = cart[index]?.name || 'Item';
-                cart.splice(index, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCart();
-                showToast(`${removedItem} removed from cart`, 'info');
-            }
-
-            function changeQuantity(index, action) {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-                if (!cart[index]) return;
-
-                if (action === 'increase') {
-                    cart[index].quantity += 1;
-                    showToast(`${cart[index].name} quantity updated`, 'success');
-                }
-
-                if (action === 'decrease') {
-                    cart[index].quantity -= 1;
-
-                    if (cart[index].quantity <= 0) {
-                        const removedName = cart[index].name;
-                        cart.splice(index, 1);
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        updateCart();
-                        showToast(`${removedName} removed from cart`, 'info');
-                        return;
-                    } else {
-                        showToast(`${cart[index].name} quantity updated`, 'success');
-                    }
-                }
-
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCart();
-            }
-    
-            cartItems.addEventListener('click', (event) => {
-                if (event.target.classList.contains('remove-button')) {
-                    const index = event.target.getAttribute('data-index');
-                    removeItem(index);
-                }
-
-                if (event.target.classList.contains('qty-btn')) {
-                    const index = event.target.getAttribute('data-index');
-                    const action = event.target.getAttribute('data-action');
-                    changeQuantity(index, action);
-                }
-            });
-    
-            checkoutButton.addEventListener('click', () => {
-                checkoutButton.classList.add('loading');
-                checkoutButton.textContent = 'Loading payment...';
-
-                setTimeout(() => {
-                    paymentContainer.style.display = 'block';
-                    updateCart(); 
-                    paymentTotalPrice.textContent = `Total Price: R${totalPriceElement.textContent}`;
-                    window.scrollTo({ top: paymentContainer.offsetTop, behavior: 'smooth' });
-                    checkoutButton.classList.remove('loading');
-                    checkoutButton.textContent = 'Proceed to Payment';
-                    showToast('Payment section ready', 'success');
-                }, 700);
-            });
-    
-            payButton.addEventListener('click', () => {
-                const totalPrice = totalPriceElement.textContent;
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const productList = cart.map(item => 
-                    `${parseInt(item.quantity, 10)}x ${item.name} - R${parseFloat(item.price).toFixed(2)}`
-                ).join('<br>');
-
-                const invoiceData = {
-                    total_price: totalPrice,
-                    bank: "TymeBank",
-                    branch: "678910",
-                    account_number: "53000794861",
-                    account_name: "BoxedSneaks.Za",
-                    date: new Date().toLocaleString(),
-                    admin_email: "electrokatt.co@gmail.com", 
-                    product_list: productList
-                };
-
-                payButton.classList.add('loading');
-                payButton.textContent = 'Processing...';
-
-                emailjs.send(
-                    "service_nb15afk",
-                    "template_36km6td",
-                    invoiceData
-                )
-                .then(() => {
-                    showToast(`Payment confirmed for R${totalPrice}`, 'success');
-                    localStorage.removeItem('cart'); 
-                    updateCart(); 
-                    paymentContainer.style.display = 'none';
-                    payButton.classList.remove('loading');
-                    payButton.textContent = 'Confirm Payment';
-                })
-                .catch((error) => {
-                    showToast('Could not send invoice email. Please contact us directly.', 'info');
-                    payButton.classList.remove('loading');
-                    payButton.textContent = 'Confirm Payment';
-                    console.error(error);
-                });
-            });
-    
-            // IMPROVEMENT 3: Simplified the alert message
-            alertButton.addEventListener('click', () => {
-                showToast('Reminder: please send proof of payment to our listed contacts.', 'info');
-            });
-    
-            updateCart();
+          saveCart();
+          renderCart();
         });
-    </script>
+      });
+
+      document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const index = Number(event.currentTarget.dataset.index);
+          const removedName = cart[index].name;
+          cart.splice(index, 1);
+          saveCart();
+          renderCart();
+          showToast(removedName + ' removed');
+        });
+      });
+    }
+
+    clearCartBtn.addEventListener('click', () => {
+      if (!cart.length) {
+        showToast('Cart already empty');
+        return;
+      }
+      cart = [];
+      saveCart();
+      renderCart();
+      showToast('Cart cleared');
+    });
+
+    proceedPaymentBtn.addEventListener('click', () => {
+      document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    confirmPaymentBtn.addEventListener('click', () => {
+      if (!cart.length) {
+        showToast('Cart empty');
+        return;
+      }
+
+      const originalHTML = confirmPaymentBtn.innerHTML;
+      confirmPaymentBtn.disabled = true;
+      confirmPaymentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending invoice...';
+
+      const total = cartTotalSpan.textContent;
+      const items = cart.map(item => `${item.quantity}x ${item.name} - R${item.price.toFixed(2)}`).join('<br>');
+
+      emailjs.send("service_nb15afk","template_36km6td",{
+        total_price: total,
+        bank:"TymeBank",
+        branch:"678910",
+        account_number:"53000794861",
+        account_name:"BoxedSneaks.Za",
+        date: new Date().toLocaleString(),
+        admin_email:"electrokatt.co@gmail.com",
+        product_list: items
+      }).then(() => {
+        showToast('Invoice sent! Thank you.');
+        cart = [];
+        saveCart();
+        renderCart();
+      }).catch(() => {
+        showToast('Email failed, but order noted.');
+      }).finally(() => {
+        confirmPaymentBtn.disabled = false;
+        confirmPaymentBtn.innerHTML = originalHTML;
+      });
+    });
+
+    renderCart();
+  })();
+</script>
 </body>
 </html>

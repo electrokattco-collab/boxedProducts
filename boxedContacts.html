@@ -1,362 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Boxed Sneakers</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            animation: fadeIn 1s ease-out;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Boxed Sneakers for orders, support, and nationwide delivery updates.">
+  <title>Contact Us · boxedsneakz_za</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root{
+      --bg-dark: rgba(10,15,25,0.78);
+      --card-bg: rgba(255,255,255,0.88);
+      --text-main:#1e1e2a;
+      --text-soft:#51607d;
+      --accent:#ff7a2f;
+      --accent-strong:#ff7518;
+      --nav-bg:rgba(255,255,255,0.05);
+      --shadow:0 20px 40px rgba(0,0,0,0.12);
+      --radius-xl:40px;
+      --radius-lg:28px;
+      --radius-pill:999px;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
-            position: relative;
-            z-index: 1000;
-            animation: slideIn 1s ease-out;
-        }
+    html{scroll-behavior:smooth;}
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    body{
+      background:
+        radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
+        url('back.jpg');
+      background-size:cover;
+      background-attachment:fixed;
+      min-height:100vh;
+      color:var(--text-main);
+      line-height:1.5;
+      padding-bottom:32px;
+    }
 
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    a, button, input, textarea{-webkit-tap-highlight-color: transparent;}
 
-        .logo {
-            font-size: 1.5rem;
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    .wrapper{
+      max-width:1100px;
+      margin:0 auto;
+      padding:20px 24px;
+    }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 1rem;
-            padding: 0;
-            margin: 0;
-        }
+    .glass-header{
+      background:var(--bg-dark);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border-radius:48px;
+      padding:12px 20px 12px 28px;
+      margin-bottom:26px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      box-shadow:0 18px 36px rgba(0,0,0,0.22);
+    }
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-        }
+    .logo{
+      font-size:2rem;
+      font-weight:700;
+      letter-spacing:-0.5px;
+      background:linear-gradient(135deg,#ffffff,#ffe3b0);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-decoration:none;
+      white-space:nowrap;
+    }
 
-        nav a:hover {
-            color: #007bff;
-        }
+    .logo i{
+      color:var(--accent);
+      margin-right:6px;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
+    .nav-links{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
 
-        .contact {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 1s ease-out;
-        }
+    .nav-links a{
+      color:#f0f3fa;
+      text-decoration:none;
+      font-weight:500;
+      padding:11px 18px;
+      border-radius:var(--radius-pill);
+      background:var(--nav-bg);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition:all 0.25s ease;
+      min-height:44px;
+    }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .nav-links a:hover,
+    .nav-links a:focus-visible{
+      background:rgba(255,140,60,0.24);
+      transform:translateY(-2px);
+      color:#fff;
+      outline:none;
+    }
 
-        .contact h2 {
-            font-size: 2.5rem;
-            color: #333;
-            margin-bottom: 20px;
-        }
+    .page-intro{
+      text-align:center;
+      margin:10px auto 26px;
+      max-width:760px;
+    }
 
-        .contact p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
-        }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.88rem;
+      font-weight:700;
+      color:#20304f;
+      background:rgba(255,255,255,0.65);
+      border:1px solid rgba(255,255,255,0.75);
+      border-radius:var(--radius-pill);
+      padding:8px 14px;
+      margin-bottom:14px;
+      box-shadow:0 8px 18px rgba(0,0,0,0.06);
+    }
 
-        .contact-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            text-align: left;
-            animation: fadeInUp 1.5s ease-out;
-        }
+    .page-intro h1{
+      font-size:clamp(2rem, 5vw, 3rem);
+      line-height:1.05;
+      margin-bottom:10px;
+      letter-spacing:-1px;
+    }
 
-        .contact-info div {
-            max-width: 300px;
-        }
+    .page-intro p{
+      color:var(--text-soft);
+      font-size:1.03rem;
+    }
 
-        .contact-info p {
-            margin-bottom: 10px;
-        }
+    .section-card{
+      background:var(--card-bg);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-radius:var(--radius-xl);
+      padding:30px;
+      margin-bottom:24px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,0.75);
+    }
 
-        .contact-info p strong {
-            font-weight: 700;
-            color: #333;
-        }
+    .quick-actions{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
 
-        .map {
-            width: 100%;
-            height: 300px;
-            margin-top: 30px;
-            border-radius: 8px;
-            overflow: hidden;
-            animation: fadeInUp 2s ease-out;
-        }
+    .quick-action{
+      text-decoration:none;
+      background:rgba(255,255,255,0.72);
+      border:1px solid rgba(12,32,58,0.07);
+      border-radius:24px;
+      padding:18px 16px;
+      color:var(--text-main);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-height:112px;
+      transition:all 0.25s ease;
+      box-shadow:0 10px 20px rgba(0,0,0,0.04);
+    }
 
-        .map iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+    .quick-action:hover,
+    .quick-action:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(255,122,47,0.35);
+      box-shadow:0 16px 26px rgba(0,0,0,0.08);
+      outline:none;
+    }
 
-        .contact-form {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 2.5s ease-out;
-        }
+    .quick-action i{
+      font-size:1.25rem;
+      color:var(--accent-strong);
+    }
 
-        .contact-form h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #333;
-        }
+    .quick-action strong{font-size:1rem;}
 
-        .contact-form input, .contact-form textarea {
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
+    .quick-action span{
+      font-size:0.92rem;
+      color:var(--text-soft);
+    }
 
-        .contact-form textarea {
-            height: 150px;
-            resize: vertical;
-        }
+    .contact-grid{
+      display:grid;
+      grid-template-columns:1fr 1.25fr;
+      gap:24px;
+      align-items:start;
+    }
 
-        .contact-form button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            animation: pulse 1s infinite;
-        }
+    .panel-title{
+      font-size:1.35rem;
+      margin-bottom:14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+    .info-box{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
 
-        .contact-form button:hover {
-            background-color: #0056b3;
-        }
+    .info-card{
+      background:rgba(255,255,255,0.72);
+      border:1px solid rgba(12,32,58,0.07);
+      border-radius:24px;
+      padding:16px 18px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      box-shadow:0 8px 18px rgba(0,0,0,0.04);
+    }
 
-        .social-links {
-            margin-top: 30px;
-            animation: fadeInUp 3s ease-out;
-        }
+    .info-card i{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:#eef4ff;
+      color:#16335b;
+      flex-shrink:0;
+    }
 
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            font-size: 1.5rem;
-            color: #333;
-            transition: color 0.3s ease;
-        }
+    .info-card p{
+      margin:0;
+      color:var(--text-soft);
+    }
 
-        .social-links a:hover {
-            color: #007bff;
-        }
+    .info-card strong{
+      color:var(--text-main);
+      display:block;
+      margin-bottom:3px;
+    }
 
-        .video-container {
-            margin-top: 30px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 3.5s ease-out;
-        }
+    .info-card a{
+      color:#1c3e6f;
+      text-decoration:none;
+      word-break:break-word;
+    }
 
-        .video-container video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+    .info-card a:hover{color:var(--accent-strong);}
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            margin-top: 30px;
-        }
+    .social-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
 
-        footer a {
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+    .social-links a{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#fff;
+      color:#1e293b;
+      text-decoration:none;
+      font-size:1.2rem;
+      border:1px solid rgba(12,32,58,0.08);
+      transition:transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+      box-shadow:0 8px 18px rgba(0,0,0,0.05);
+    }
 
-        footer a:hover {
-            color: #007bff;
-        }
+    .social-links a:hover,
+    .social-links a:focus-visible{
+      color:var(--accent-strong);
+      transform:translateY(-2px);
+      box-shadow:0 14px 24px rgba(0,0,0,0.08);
+      outline:none;
+    }
 
-        @media (max-width: 768px) {
-            .contact-info {
-                flex-direction: column;
-                align-items: center;
-            }
+    .contact-form{
+      background:rgba(255,255,255,0.72);
+      border:1px solid rgba(12,32,58,0.07);
+      border-radius:28px;
+      padding:22px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.04);
+    }
 
-            .contact-form input, .contact-form textarea {
-                width: 100%;
-            }
-        }
-    </style>
+    .form-subtext{
+      color:var(--text-soft);
+      margin-bottom:16px;
+      font-size:0.96rem;
+    }
+
+    .field-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .contact-form input,
+    .contact-form textarea{
+      width:100%;
+      padding:15px 16px;
+      margin-bottom:14px;
+      border-radius:18px;
+      border:1px solid #d6dbe6;
+      background:#fff;
+      color:var(--text-main);
+      font-size:0.98rem;
+      transition:border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder{color:#7b879c;}
+
+    .contact-form input:focus,
+    .contact-form textarea:focus{
+      outline:none;
+      border-color:var(--accent-strong);
+      box-shadow:0 0 0 4px rgba(255,117,24,0.12);
+    }
+
+    .contact-form textarea{
+      resize:vertical;
+      min-height:140px;
+    }
+
+    .form-note{
+      color:var(--text-soft);
+      font-size:0.88rem;
+      margin-top:-4px;
+      margin-bottom:14px;
+    }
+
+    .action-btn{
+      background:#0b1e33;
+      color:#fff;
+      padding:14px 28px;
+      border-radius:var(--radius-pill);
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      transition:all 0.25s ease;
+      min-height:48px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .action-btn:hover,
+    .action-btn:focus-visible{
+      background:var(--accent-strong);
+      transform:translateY(-2px);
+      outline:none;
+    }
+
+    .video-card{
+      display:grid;
+      grid-template-columns:1.1fr 0.9fr;
+      gap:22px;
+      align-items:center;
+    }
+
+    .video-copy p{
+      color:var(--text-soft);
+      margin-top:8px;
+      margin-bottom:16px;
+    }
+
+    .delivery-points{
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+
+    .delivery-points li{
+      display:flex;
+      gap:10px;
+      color:#31415f;
+      align-items:flex-start;
+    }
+
+    .delivery-points i{
+      color:var(--accent-strong);
+      margin-top:3px;
+    }
+
+    .video-container video{
+      width:100%;
+      border-radius:30px;
+      display:block;
+      box-shadow:0 20px 34px rgba(0,0,0,0.12);
+      background:#dfe7f6;
+    }
+
+    .mobile-sticky-actions{
+      position:sticky;
+      bottom:12px;
+      display:none;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+      z-index:20;
+    }
+
+    .mobile-sticky-actions a{
+      text-decoration:none;
+      border-radius:18px;
+      padding:14px 16px;
+      color:#fff;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      box-shadow:0 16px 28px rgba(0,0,0,0.14);
+    }
+
+    .mobile-sticky-actions .whatsapp-btn{background:#179c52;}
+    .mobile-sticky-actions .call-btn{background:#16335b;}
+
+    .toast-container{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      z-index:9999;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .toast{
+      background:#0b1622;
+      color:#fff;
+      padding:14px 20px;
+      border-radius:var(--radius-pill);
+      border-left:6px solid #22c55e;
+      box-shadow:0 18px 30px rgba(0,0,0,0.25);
+      max-width:320px;
+      animation:slideIn 0.2s ease-out;
+    }
+
+    footer{
+      text-align:center;
+      color:#40516d;
+      padding:8px 0 14px;
+      font-size:0.95rem;
+    }
+
+    @keyframes slideIn{
+      from{opacity:0; transform:translateX(24px);}
+      to{opacity:1; transform:translateX(0);}
+    }
+
+    @media (max-width: 920px){
+      .contact-grid,
+      .video-card{grid-template-columns:1fr;}
+    }
+
+    @media (max-width: 768px){
+      body{background-attachment:scroll;}
+      .wrapper{padding:16px;}
+      .glass-header{
+        flex-direction:column;
+        align-items:stretch;
+        gap:12px;
+        border-radius:30px;
+        padding:16px;
+      }
+      .logo{
+        font-size:1.7rem;
+        text-align:center;
+      }
+      .nav-links{justify-content:center;}
+      .nav-links a{
+        flex:1 1 calc(50% - 8px);
+        justify-content:center;
+        min-width:140px;
+      }
+      .section-card{
+        padding:22px;
+        border-radius:28px;
+      }
+      .quick-actions{grid-template-columns:1fr;}
+      .field-row{grid-template-columns:1fr; gap:0;}
+      .mobile-sticky-actions{display:grid;}
+      .toast-container{
+        right:16px;
+        left:16px;
+        bottom:16px;
+      }
+      .toast{max-width:none;}
+    }
+
+    @media (max-width: 480px){
+      .page-intro h1{font-size:1.9rem;}
+      .nav-links a{flex:1 1 100%;}
+      .section-card{padding:18px;}
+      .info-card{padding:14px;}
+      .contact-form{padding:16px;}
+      .video-container video{border-radius:22px;}
+    }
+  </style>
 </head>
 <body>
-    <header class="header-container">
-        <a href="boxedHome.html" class="logo">boxedsneakz</a>
-        <nav>
-            <ul>
-                <li><a href="boxedHome.html">Home</a></li>
-                <li><a href="boxedAboutUs.html">About Us</a></li>
-                <li><a href="boxedCart.html">Cart</a></li>
-            </ul>
-        </nav>
+  <div class="wrapper">
+    <header class="glass-header">
+      <a href="index.html" class="logo"><i class="fas fa-shoe-prints"></i> boxedsneakz_za</a>
+      <div class="nav-links">
+        <a href="index.html"><i class="fas fa-house"></i> Home</a>
+        <a href="boxedCart.html"><i class="fas fa-bag-shopping"></i> Cart</a>
+        <a href="boxedContacts.html"><i class="fas fa-address-book"></i> Contact</a>
+      </div>
     </header>
 
-    <div class="container">
-        <div class="contact">
-            <h2>Contact Us</h2>
-            <p>Sneakers Shopping & Retail</p>
-            <p>Est. 2021</p>
-            <p>Online Retailer</p>
-            <p>Safe Payment</p>
-            <p>Free Efficient Delivery Nationwide</p>
-            <p>Ready to order? Use the WhatsApp link below to order.</p>
-            
-            <div class="contact-info"><!--The admin details for the busniess are entered here-->
-                <div>
-                    <p><strong>Email:</strong> <a href="boxedsneak@gmail.com">boxedsneak@gmail.com</a></p>
-                    <p><strong>Call Us:</strong> <a href="tel:+27627313073">+27627313073</a></p>
-                    <p><strong>WhatsApp:</strong> <a href="https://wa.me/c/27650947689">+27627313073</a></p>
-                    
-                </div>
-                <div>
-                    <p><strong>Opening Hours:</strong></p>
-                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p>Saturday: 10:00 AM - 4:00 PM</p>
-                    <p>Sunday: Closed</p>
-                </div>
+    <section class="page-intro">
+      <div class="eyebrow"><i class="fas fa-comments"></i> Fast replies for orders and support</div>
+      <h1>Let’s help you get your next pair.</h1>
+      <p>Reach out for sneaker orders, sizing questions, delivery updates, and payment support. We’re online and ready to assist.</p>
+    </section>
+
+    <section class="section-card">
+      <div class="quick-actions">
+        <a class="quick-action" href="https://wa.me/27627313073" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-whatsapp"></i>
+          <strong>WhatsApp us</strong>
+          <span>Fastest way to order or ask a question</span>
+        </a>
+        <a class="quick-action" href="tel:+27627313073">
+          <i class="fas fa-phone"></i>
+          <strong>Call directly</strong>
+          <span>Speak to us during opening hours</span>
+        </a>
+        <a class="quick-action" href="mailto:boxedsneak@gmail.com">
+          <i class="fas fa-envelope"></i>
+          <strong>Email support</strong>
+          <span>Best for detailed order or payment issues</span>
+        </a>
+      </div>
+
+      <div class="contact-grid">
+        <div class="info-box">
+          <h2 class="panel-title"><i class="fas fa-circle-info"></i> Contact details</h2>
+
+          <div class="info-card">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <strong>Email</strong>
+              <p><a href="mailto:boxedsneak@gmail.com">boxedsneak@gmail.com</a></p>
             </div>
+          </div>
 
-            
-
-            <div class="video-container">
-                <video controls>
-                    <source src="boxedVideos/testVid.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+          <div class="info-card">
+            <i class="fas fa-phone"></i>
+            <div>
+              <strong>Call or WhatsApp</strong>
+              <p><a href="tel:+27627313073">+27 62 731 3073</a></p>
             </div>
+          </div>
 
-            <div class="contact-form">
-                <h3>Send Us a Message</h3>
-                <form id="contactForm" action="https://formsubmit.co/boxedsneak@gmail.com" method="POST">
-
-    <!-- FormSubmit Settings -->
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_subject" value="New Contact Form Message">
-
-    <input type="text" id="name" name="name" placeholder="Your Name" required>
-    <input type="email" id="email" name="email" placeholder="Your Email" required>
-    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number">
-    <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-
-    <button type="submit">Send Message</button>
-</form>
-
+          <div class="info-card">
+            <i class="fas fa-clock"></i>
+            <div>
+              <strong>Opening hours</strong>
+              <p>Mon–Fri: 9:00 AM – 6:00 PM<br>Sat: 10:00 AM – 4:00 PM<br>Sun: Closed</p>
             </div>
+          </div>
 
-            <div class="social-links">
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter-square"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram-square"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <div class="info-card">
+            <i class="fas fa-location-dot"></i>
+            <div>
+              <strong>Business type</strong>
+              <p>Online retailer · Nationwide delivery across South Africa</p>
             </div>
+          </div>
+
+          <div class="info-card">
+            <i class="fas fa-hashtag"></i>
+            <div>
+              <strong>Follow us</strong>
+              <div class="social-links">
+                <a href="https://www.instagram.com/boxed.sneaks_za/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/27627313073" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="mailto:boxedsneak@gmail.com" aria-label="Email">
+                  <i class="fas fa-envelope"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+
+        <div class="contact-form">
+          <h2 class="panel-title"><i class="fas fa-paper-plane"></i> Send a message</h2>
+          <p class="form-subtext">Fill in your details and tell us what you need. The message will be sent to your support inbox.</p>
+
+          <form id="contactForm" action="https://formsubmit.co/boxedsneak@gmail.com" method="POST">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_subject" value="New Boxed Sneakers Contact Form Message">
+            <input type="hidden" name="_next" value="https://electrokattco-collab.github.io/boxedProducts/boxedContacts.html?sent=1">
+
+            <div class="field-row">
+              <input type="text" name="name" placeholder="Your name" required>
+              <input type="email" name="email" placeholder="Email address" required>
+            </div>
+
+            <input type="tel" name="phone" placeholder="Phone number">
+            <textarea name="message" rows="5" placeholder="Tell us what you need help with..." required></textarea>
+            <p class="form-note">For faster service, include the sneaker name, size, and anything important about your order.</p>
+            <button type="submit" class="action-btn" id="submitBtn">
+              <i class="fas fa-paper-plane"></i>
+              <span>Send Message</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="mobile-sticky-actions">
+        <a class="whatsapp-btn" href="https://wa.me/27627313073" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a class="call-btn" href="tel:+27627313073">
+          <i class="fas fa-phone"></i> Call
+        </a>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="video-card">
+        <div class="video-copy">
+          <h2 class="panel-title"><i class="fas fa-truck-fast"></i> Delivery and ordering help</h2>
+          <p>We keep ordering simple. Message us for availability, confirm your size, then send proof of payment through the contact options above.</p>
+          <ul class="delivery-points">
+            <li><i class="fas fa-check-circle"></i><span>Nationwide delivery available</span></li>
+            <li><i class="fas fa-check-circle"></i><span>Support for product questions and payment follow-up</span></li>
+            <li><i class="fas fa-check-circle"></i><span>Quick contact options designed for mobile users</span></li>
+          </ul>
+        </div>
+
+        <div class="video-container">
+          <video controls poster="video-thumb.jpg">
+            <source src="boxedVideos/testVid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
 
     <footer>
-        <p>&copy; 2024 Boxed Sneakers. All rights reserved.</p>
-        <p><a href="boxedPolicy.html">Terms and Conditions</a></p>
+      <p>© 2025 Boxed Sneakers. All rights reserved.</p>
     </footer>
+  </div>
 
+  <div class="toast-container" id="toastContainer"></div>
 
+  <script>
+    (function () {
+      const toastContainer = document.getElementById('toastContainer');
+      const submitBtn = document.getElementById('submitBtn');
+      const form = document.getElementById('contactForm');
+
+      function showToast(message) {
+        if (!toastContainer) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => toast.remove(), 2800);
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('sent') === '1') {
+        showToast('Message sent successfully.');
+        if (window.history.replaceState) {
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+      }
+
+      if (form && submitBtn) {
+        form.addEventListener('submit', () => {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Sending...</span>';
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
