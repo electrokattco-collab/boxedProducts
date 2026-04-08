@@ -72,7 +72,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 22px;
+      gap: 16px;
+      flex-wrap: wrap;
       }
       /* Sticky navigation bar style (for potential JavaScript implementation) */
       .sticky {
@@ -92,14 +93,23 @@
       text-decoration: none;
       color: rgb(255, 255, 255);
       font-weight: bold;
-      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+      }
+      nav ul li a:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.10);
+      transform: translateY(-1px);
       }
       /* Search box layout */
       .search-box {
       position: relative;
       width: 100%;
       max-width: 500px;
-      margin: 20px auto;
+      margin: 10px auto 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -131,6 +141,8 @@
       /* Hover state for search button */
       .search-btn:hover {
       background-color: #dbb91f;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(255, 102, 0, 0.25);
       }
       /* Search icon size */
       .fa-search {
@@ -168,6 +180,7 @@
       gap: 20px;
       justify-items: stretch;
       align-items: stretch;
+      grid-auto-rows: 1fr;
       }
       /* Individual product card styling */
       .product {
@@ -176,11 +189,11 @@
       border-radius: 18px;
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.10);
       padding: 18px;
-      max-width: 300px;
+      max-width: none;
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       overflow: hidden;
       position: relative;
       display: flex;
@@ -221,6 +234,7 @@
       font-size: 0.95rem;
       color: #5e6470;
       margin-bottom: 16px;
+      min-height: 2.6rem;
       }
       .product .product-top {
       display: flex;
@@ -254,6 +268,7 @@
       .product button:hover {
       background-color: #0056b3;
       transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 86, 179, 0.24);
       }
       .product button.loading {
       opacity: 0.75;
@@ -263,6 +278,7 @@
       .product:hover {
       transform: translateY(-8px);
       box-shadow: 0 18px 35px rgba(0, 0, 0, 0.14);
+      border-color: rgba(0, 123, 255, 0.18);
       }
       .toast-container {
       position: fixed;
@@ -294,17 +310,17 @@
       position: relative;
       display: inline-flex;
       align-items: center;
-      padding-right: 16px;
+      padding-right: 22px;
       }
       .cart-count {
       position: absolute;
-      top: -8px;
-      right: -8px;
+      top: 1px;
+      right: -2px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 19px;
-      height: 19px;
+      min-width: 20px;
+      height: 20px;
       padding: 0 6px;
       border-radius: 999px;
       background: #ff6600;
@@ -312,6 +328,7 @@
       font-size: 0.72rem;
       font-weight: 700;
       box-shadow: 0 4px 10px rgba(255, 102, 0, 0.35);
+      border: 2px solid rgba(17, 24, 39, 0.85);
       }
       @keyframes toastIn {
       to {
@@ -320,16 +337,45 @@
       }
       }
       @media (max-width: 768px) {
+      .header-with-background .container {
+      padding-top: 8px;
+      }
       nav ul {
       flex-wrap: wrap;
-      gap: 10px;
+      justify-content: center;
+      gap: 8px 6px;
+      }
+      nav ul li a {
+      padding: 8px 10px;
+      font-size: 0.95rem;
       }
       .search-box {
       order: 10;
       width: 100%;
+      max-width: 100%;
+      margin-top: 14px;
+      }
+      #searchInput {
+      font-size: 13px;
       }
       .page-intro h1 {
       font-size: 1.5rem;
+      }
+      .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      }
+      @media (max-width: 480px) {
+      nav ul {
+      gap: 6px;
+      }
+      nav ul li a {
+      padding: 7px 9px;
+      font-size: 0.9rem;
+      }
+      .cart-count {
+      top: -2px;
+      right: -4px;
       }
       }
       
