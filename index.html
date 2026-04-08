@@ -520,27 +520,30 @@
       
       function addToCart(name, price, quantity) {
           const productElement = document.querySelector(`.product[data-name="${name}"]`);
+
           if (!productElement) {
               alert('Product not found');
               return;
           }
-          
-          // Retrieve cart from localStorage or initialize an empty array
+
+          const productImage = productElement.querySelector('img').getAttribute('src');
+
           let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          // Check if the item is already in the cart
           const itemIndex = cart.findIndex(item => item.name === name);
-          
+
           if (itemIndex > -1) {
-              // If item exists, increase quantity
               cart[itemIndex].quantity += quantity;
           } else {
-              // If item is new, add it to the cart
-              cart.push({ name, price, quantity });
+              cart.push({
+                  name,
+                  price,
+                  quantity,
+                  image: productImage
+              });
           }
-          
-  
+
           localStorage.setItem('cart', JSON.stringify(cart));
-          alert('Item added to cart');
+          alert(`${name} added to cart`);
       }
       
       

@@ -153,6 +153,20 @@
             text-decoration: underline;
         }
 
+        .qty-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .qty-btn:hover {
+            background-color: #0056b3;
+        }
+
         .assurance, .tax-info {
             margin-top: 20px;
             padding: 10px;
@@ -345,18 +359,41 @@
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
                 cartItems.innerHTML = '';
                 let totalPrice = 0;
-    
+
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<li>Your cart is empty.</li>';
+                    totalPriceElement.textContent = '0.00';
+                    checkoutButton.style.display = 'none';
+                    paymentContainer.style.display = 'none';
+                    return;
+                }
+
+                checkoutButton.style.display = 'inline-block';
+
                 cart.forEach((item, index) => {
+                    const itemTotal = parseFloat(item.price) * parseInt(item.quantity, 10);
+                    totalPrice += itemTotal;
+
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        ${item.name} - R${parseFloat(item.price).toFixed(2)} x ${parseInt(item.quantity, 10)}
-                        <button class="remove-button" data-index="${index}">Remove</button>
+                        <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                            <img src="${item.image || 'head.jpg'}" alt="${item.name}" style="width:70px; height:70px; object-fit:cover; border-radius:6px;">
+                            <div style="flex:1; text-align:left;">
+                                <strong>${item.name}</strong><br>
+                                Price: R${parseFloat(item.price).toFixed(2)}<br>
+                                Quantity: ${parseInt(item.quantity, 10)}<br>
+                                Item Total: R${itemTotal.toFixed(2)}
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <button class="qty-btn" data-index="${index}" data-action="increase">+</button>
+                                <button class="qty-btn" data-index="${index}" data-action="decrease">-</button>
+                                <button class="remove-button" data-index="${index}">Remove</button>
+                            </div>
+                        </div>
                     `;
                     cartItems.appendChild(li);
-                    // IMPROVEMENT 1: Added parseFloat and parseInt for calculation robustness
-                    totalPrice += parseFloat(item.price) * parseInt(item.quantity, 10);
                 });
-    
+
                 totalPriceElement.textContent = totalPrice.toFixed(2);
             }
     
@@ -366,11 +403,38 @@
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCart();
             }
+
+            function changeQuantity(index, action) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                if (!cart[index]) return;
+
+                if (action === 'increase') {
+                    cart[index].quantity += 1;
+                }
+
+                if (action === 'decrease') {
+                    cart[index].quantity -= 1;
+
+                    if (cart[index].quantity <= 0) {
+                        cart.splice(index, 1);
+                    }
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
     
             cartItems.addEventListener('click', (event) => {
-                if (event.target && event.target.classList.contains('remove-button')) {
+                if (event.target.classList.contains('remove-button')) {
                     const index = event.target.getAttribute('data-index');
                     removeItem(index);
+                }
+
+                if (event.target.classList.contains('qty-btn')) {
+                    const index = event.target.getAttribute('data-index');
+                    const action = event.target.getAttribute('data-action');
+                    changeQuantity(index, action);
                 }
             });
     
