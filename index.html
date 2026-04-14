@@ -393,12 +393,6 @@
       border-radius:12px;
       font-weight:600;
     }
-      background:#edf3ff;
-      padding:6px 10px;
-      border-radius:var(--radius-pill);
-      font-weight:700;
-      white-space:nowrap;
-    }
 
     .delivery{
       color:#51688e;
@@ -493,15 +487,24 @@
       padding:24px;
       position:relative;
       box-shadow:0 24px 40px rgba(0,0,0,0.22);
+      max-height:90vh;
+      overflow-y:auto;
     }
 
     .close-modal{
       position:absolute;
       top:18px;
       right:24px;
-      font-size:28px;
+      font-size:20px;
       cursor:pointer;
       color:#6a778f;
+      background:rgba(0,0,0,0.05);
+      border-radius:50%;
+      width:32px;
+      height:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     .close-modal:hover{
@@ -513,6 +516,8 @@
       border-radius:24px;
       margin:14px 0 16px;
       background:#edf2fb;
+      max-height:250px;
+      object-fit:cover;
     }
 
     .modal-price{
@@ -532,12 +537,67 @@
       display:flex;
       gap:12px;
       flex-wrap:wrap;
+      margin-top:24px;
+      padding-bottom:12px;
     }
 
     .modal-secondary{
       background:#eef3fb;
       color:#20304f;
       box-shadow:none;
+    }
+
+    .variant-selector{
+      margin-bottom:18px;
+    }
+
+    .variant-selector label{
+      display:block;
+      margin-bottom:8px;
+      color:#1e1e2a;
+      font-size:0.95rem;
+    }
+
+    .variant-dropdown{
+      display:none;
+      width:100%;
+      padding:10px 12px;
+      border:1px solid #d4dce9;
+      border-radius:8px;
+      font-size:0.95rem;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    .size-buttons, .color-buttons{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .variant-button{
+      padding:8px 14px;
+      border:2px solid #d4dce9;
+      background:#fff;
+      color:#1e1e2a;
+      border-radius:8px;
+      cursor:pointer;
+      transition:all 0.2s ease;
+      font-weight:500;
+      font-size:0.9rem;
+      min-height:36px;
+    }
+
+    .variant-button:hover{
+      border-color:var(--accent);
+      background:var(--accent-light);
+    }
+
+    .variant-button.selected{
+      background:var(--accent);
+      color:#fff;
+      border-color:var(--accent);
+      box-shadow:0 8px 16px rgba(255,126,63,0.3);
     }
 
     .mobile-quick-bar{
@@ -686,6 +746,14 @@
         border-radius:28px;
       }
 
+      .variant-dropdown{
+        display:block !important;
+      }
+
+      .size-buttons, .color-buttons{
+        display:none;
+      }
+
       .toast-container{
         left:16px;
         right:16px;
@@ -786,7 +854,7 @@
         <i class="fab fa-whatsapp"></i>
         <div>
           <strong>WhatsApp Support</strong>
-          <span>+27 62 731 3073</span>
+          <span>+27 65 094 7689</span>
         </div>
       </div>
       <div class="trust-item">
@@ -815,6 +883,25 @@
     <img id="modalImage" src="" class="modal-img" alt="">
     <div class="modal-price" id="modalPrice">R 0.00</div>
     <p class="modal-copy" id="modalCopy">Quick view for this pair.</p>
+    
+    <!-- Size Selector -->
+    <div class="variant-selector">
+      <label for="sizeSelect"><strong>Size</strong></label>
+      <select id="sizeSelect" class="variant-dropdown">
+        <option value="">Choose a size</option>
+      </select>
+      <div class="size-buttons" id="sizeButtons"></div>
+    </div>
+    
+    <!-- Color Selector -->
+    <div class="variant-selector">
+      <label for="colorSelect"><strong>Color</strong></label>
+      <select id="colorSelect" class="variant-dropdown">
+        <option value="">Choose a color</option>
+      </select>
+      <div class="color-buttons" id="colorButtons"></div>
+    </div>
+    
     <div class="modal-actions">
       <button class="add-btn modal-secondary" type="button" id="modalCloseBtn">Close</button>
       <button class="add-btn" type="button" id="modalAddToCart">Add to bag</button>
@@ -825,22 +912,24 @@
 <script>
   (function(){
     const products = [
-      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"], stock: "In stock" },
-      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4.jpg"], stock: "In stock" },
-      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"], stock: "In stock" },
-      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"], stock: "In stock" },
-      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"], stock: "In stock" },
-      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12.jpg"], stock: "In stock" },
-      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"], stock: "In stock" },
-      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"], stock: "In stock" },
-      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"], stock: "In stock" },
-      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15.jpg"], stock: "In stock" }
+      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Red", "Blue"] },
+      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Green", "Navy"] },
+      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Grey"] },
+      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Purple"] },
+      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Red", "Orange"] },
+      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "Bred", "Fire Red"] },
+      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Pink"] },
+      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Wheat", "Brown", "Black"] },
+      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Grey", "Black", "White"] },
+      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Checkered"] }
     ];
 
     let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
     let activeTag = 'all';
     let currentSearch = '';
     let currentModalProduct = null;
+    let selectedSize = null;
+    let selectedColor = null;
 
     const productGrid = document.getElementById('productGrid');
     const cartCountSpan = document.getElementById('cartCountDisplay');
@@ -856,6 +945,10 @@
     const modalAddToCart = document.getElementById('modalAddToCart');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const sizeSelect = document.getElementById('sizeSelect');
+    const colorSelect = document.getElementById('colorSelect');
+    const sizeButtons = document.getElementById('sizeButtons');
+    const colorButtons = document.getElementById('colorButtons');
 
     function showToast(message) {
       if (!toastContainer) return;
@@ -877,12 +970,13 @@
       localStorage.setItem('sneakerCart', JSON.stringify(cart));
     }
 
-    function addToCart(name, price, image, id) {
-      const existing = cart.find(item => item.id === id);
+    function addToCart(name, price, image, id, size, color) {
+      // Different variants of same product are separate cart items
+      const existing = cart.find(item => item.id === id && item.size === size && item.color === color);
       if (existing) {
         existing.quantity += 1;
       } else {
-        cart.push({ id, name, price, quantity: 1, image });
+        cart.push({ id, name, price, quantity: 1, image, size: size || null, color: color || null });
       }
       saveCart();
       updateCartCount();
@@ -943,17 +1037,8 @@
         });
 
         card.querySelector('.add-btn').addEventListener('click', (event) => {
-          const btn = event.currentTarget;
-          const originalText = btn.textContent;
-          btn.disabled = true;
-          btn.textContent = 'Adding...';
-
-          addToCart(btn.dataset.name, parseFloat(btn.dataset.price), btn.dataset.image, parseInt(btn.dataset.id));
-
-          setTimeout(() => {
-            btn.disabled = false;
-            btn.textContent = originalText;
-          }, 500);
+          // Open modal to select size and color
+          openModal(prod);
         });
 
         productGrid.appendChild(card);
@@ -962,15 +1047,86 @@
 
     function openModal(product) {
       currentModalProduct = product;
+      selectedSize = null;
+      selectedColor = null;
+      
       modalTitle.textContent = product.name;
       modalImg.src = product.images[0];
       modalPrice.textContent = 'R ' + product.price.toFixed(2);
       modalCopy.textContent = product.subtitle;
       modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Populate size selector
+      sizeSelect.innerHTML = '<option value="">Choose a size</option>';
+      sizeButtons.innerHTML = '';
+      product.sizes.forEach(size => {
+        const option = document.createElement('option');
+        option.value = size;
+        option.textContent = 'Size ' + size;
+        sizeSelect.appendChild(option);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'variant-button';
+        btn.textContent = size;
+        btn.setAttribute('data-size', size);
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          selectedSize = size;
+          sizeSelect.value = size;
+          document.querySelectorAll('.size-buttons .variant-button').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+        sizeButtons.appendChild(btn);
+      });
+
+      sizeSelect.addEventListener('change', (e) => {
+        selectedSize = e.target.value || null;
+        document.querySelectorAll('.size-buttons .variant-button').forEach(b => b.classList.remove('selected'));
+        if (selectedSize) {
+          const btn = sizeButtons.querySelector(`[data-size="${selectedSize}"]`);
+          if (btn) btn.classList.add('selected');
+        }
+      });
+
+      // Populate color selector
+      colorSelect.innerHTML = '<option value="">Choose a color</option>';
+      colorButtons.innerHTML = '';
+      product.colors.forEach(color => {
+        const option = document.createElement('option');
+        option.value = color;
+        option.textContent = color;
+        colorSelect.appendChild(option);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'variant-button';
+        btn.textContent = color;
+        btn.setAttribute('data-color', color);
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          selectedColor = color;
+          colorSelect.value = color;
+          document.querySelectorAll('.color-buttons .variant-button').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+        colorButtons.appendChild(btn);
+      });
+
+      colorSelect.addEventListener('change', (e) => {
+        selectedColor = e.target.value || null;
+        document.querySelectorAll('.color-buttons .variant-button').forEach(b => b.classList.remove('selected'));
+        if (selectedColor) {
+          const btn = colorButtons.querySelector(`[data-color="${selectedColor}"]`);
+          if (btn) btn.classList.add('selected');
+        }
+      });
     }
 
     function closeModal() {
       modal.style.display = 'none';
+      document.body.style.overflow = '';
     }
 
     function applyTag(tag) {
@@ -1005,7 +1161,17 @@
 
     modalAddToCart.addEventListener('click', () => {
       if (!currentModalProduct) return;
-      addToCart(currentModalProduct.name, currentModalProduct.price, currentModalProduct.images[0], currentModalProduct.id);
+      
+      if (!selectedSize) {
+        showToast('Please choose a size');
+        return;
+      }
+      if (!selectedColor) {
+        showToast('Please choose a color');
+        return;
+      }
+      
+      addToCart(currentModalProduct.name, currentModalProduct.price, currentModalProduct.images[0], currentModalProduct.id, selectedSize, selectedColor);
       closeModal();
     });
 

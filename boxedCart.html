@@ -887,7 +887,7 @@
         <i class="fab fa-whatsapp"></i>
         <div>
           <strong>WhatsApp Support</strong>
-          <span>+27 62 731 3073</span>
+          <span>+27 65 094 7689</span>
         </div>
       </div>
       <div class="trust-item">
@@ -964,12 +964,14 @@
         total += itemTotal;
         count += item.quantity;
 
+        const variantText = (item.size || item.color) ? ` | ${item.size ? 'Size: ' + item.size : ''}${item.size && item.color ? ' | ' : ''}${item.color ? 'Color: ' + item.color : ''}`.trim() : '';
+
         html += `
           <article class="cart-item-row">
             <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='sneaker1.jpg'">
             <div class="cart-item-info">
               <div class="cart-item-title">${item.name}</div>
-              <div class="cart-item-sub">Premium sneaker selected for checkout</div>
+              <div class="cart-item-sub">${variantText || 'Premium sneaker selected for checkout'}</div>
               <div class="item-meta">
                 <span class="meta-pill">R ${item.price.toFixed(2)} each</span>
                 <span class="meta-pill">Subtotal: R ${itemTotal.toFixed(2)}</span>
@@ -1048,11 +1050,17 @@
       }
 
       const total = cartTotalSpan.textContent;
-      const items = cart.map(item => `${item.quantity}x ${item.name} - R${item.price.toFixed(2)}`).join('%0A');
+      const items = cart.map(item => {
+        let itemStr = `${item.quantity}x ${item.name} - R${item.price.toFixed(2)}`;
+        if (item.size || item.color) {
+          itemStr += ` (${item.size ? 'Size: ' + item.size : ''}${item.size && item.color ? ', ' : ''}${item.color ? 'Color: ' + item.color : ''})`;
+        }
+        return itemStr;
+      }).join('%0A');
 
       const whatsappMessage = `Hi! I'd like to order:%0A${items}%0ATotal: R${total}%0A%0APlease confirm availability and provide payment details.`;
 
-      const whatsappUrl = `https://wa.me/27627313073?text=${whatsappMessage}`;
+      const whatsappUrl = `https://wa.me/27650947689?text=${whatsappMessage}`;
 
       window.open(whatsappUrl, '_blank');
 
