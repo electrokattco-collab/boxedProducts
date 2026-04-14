@@ -217,6 +217,49 @@
             width: 100%;
         }
 
+        .trust-section{
+            display:flex;
+            justify-content:space-around;
+            gap:20px;
+            margin-bottom:20px;
+            flex-wrap:wrap;
+        }
+
+        .trust-item{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-size:0.9rem;
+        }
+
+        .trust-item i{
+            color:#e67e22;
+            font-size:1.2rem;
+        }
+
+        .trust-item strong{
+            display:block;
+            color:#fff;
+        }
+
+        .trust-item span{
+            color:#ccc;
+        }
+
+        .footer-links{
+            margin-bottom:10px;
+        }
+
+        .footer-links a{
+            color:#ccc;
+            text-decoration:none;
+            margin:0 8px;
+        }
+
+        .footer-links a:hover{
+            color:#e67e22;
+        }
+
         @media screen and (max-width: 768px) {
             .main-header {
                 padding: 1rem;
@@ -404,9 +447,75 @@
         </section>
     </main>
 
+    <section id="returns" class="about-section">
+        <div class="container">
+            <h1>Returns & Refunds Policy</h1>
+            <div class="about-content">
+                <article class="text-container">
+                    <p>We want you to be completely satisfied with your Boxed Sneakers purchase. If you're not happy with your order, here's what you need to know:</p>
+                    
+                    <h2>Return Window</h2>
+                    <p>You have 14 days from delivery to request a return. Items must be unworn, in original packaging, with all tags attached.</p>
+                    
+                    <h2>Refund Process</h2>
+                    <p>Once we receive your return, refunds are processed within 3-5 business days. You'll receive your money back via the original payment method.</p>
+                    
+                    <h2>Conditions</h2>
+                    <ul>
+                        <li>Items must be in new, unworn condition</li>
+                        <li>Original packaging and tags must be included</li>
+                        <li>Proof of purchase required</li>
+                        <li>Return shipping costs are the customer's responsibility</li>
+                    </ul>
+                    
+                    <h2>Contact Us</h2>
+                    <p>For returns or refunds, contact us via WhatsApp at +27 62 731 3073 or email boxedsneaks@gmail.com with your order details.</p>
+                </article>
+                <aside class="image-container">
+                    <img src="aboutPic.jpg" alt="Returns policy illustration" loading="lazy">
+                </aside>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
-            <p>&copy; 2024 Boxed Sneakers. All rights reserved.</p>
+            <div class="trust-section">
+                <div class="trust-item">
+                    <i class="fas fa-truck"></i>
+                    <div>
+                        <strong>Free Delivery</strong>
+                        <span>Nationwide via Paxi, Uber, Aramex</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>100% Authentic</strong>
+                        <span>Guaranteed genuine products</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <strong>WhatsApp Support</strong>
+                        <span>+27 62 731 3073</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>South Africa</strong>
+                        <span>Serving nationwide</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="boxedAboutUs.html">About Us</a> |
+                <a href="boxedContacts.html">Contact</a> |
+                <a href="#returns">Returns & Refunds</a>
+            </div>
+            <p>© 2025 Boxed Sneakers. Premium kicks. <i class="fas fa-heart" style="color:#ff5e5e;"></i></p>
         </div>
     </footer>
 

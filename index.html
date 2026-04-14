@@ -385,9 +385,14 @@
       color:var(--blue);
     }
 
-    .mini-tag{
-      font-size:0.75rem;
-      color:#3f5e8c;
+    .stock-status{
+      font-size:0.8rem;
+      color:#0f3b2c;
+      background:#e8f5e8;
+      padding:4px 8px;
+      border-radius:12px;
+      font-weight:600;
+    }
       background:#edf3ff;
       padding:6px 10px;
       border-radius:var(--radius-pill);
@@ -578,6 +583,49 @@
       padding-bottom:8px;
     }
 
+    .trust-section{
+      display:flex;
+      justify-content:space-around;
+      gap:20px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:0.9rem;
+    }
+
+    .trust-item i{
+      color:var(--accent);
+      font-size:1.2rem;
+    }
+
+    .trust-item strong{
+      display:block;
+      color:#1e1e2a;
+    }
+
+    .trust-item span{
+      color:#586883;
+    }
+
+    .footer-links{
+      margin-bottom:10px;
+    }
+
+    .footer-links a{
+      color:#586883;
+      text-decoration:none;
+      margin:0 8px;
+    }
+
+    .footer-links a:hover{
+      color:var(--accent);
+    }
+
     @media (max-width: 920px){
       .top-tools{
         flex-direction:column;
@@ -682,6 +730,7 @@
     <a href="index.html" class="logo"><i class="fas fa-shoe-prints"></i> boxedSneaks</a>
     <div class="nav-links">
       <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="boxedAboutUs.html"><i class="fas fa-info-circle"></i> About</a>
       <a href="boxedCart.html" class="cart-link"><i class="fas fa-shopping-bag"></i> Cart <span id="cartCountDisplay" class="cart-badge">0</span></a>
       <a href="boxedContacts.html"><i class="fas fa-address-book"></i> Contact</a>
       <div class="search-wrapper">
@@ -717,7 +766,44 @@
     </div>
   </div>
 
-  <footer><p>© 2025 Boxed Sneakers. Premium kicks. <i class="fas fa-heart" style="color:#ff5e5e;"></i></p></footer>
+  <footer>
+    <div class="trust-section">
+      <div class="trust-item">
+        <i class="fas fa-truck"></i>
+        <div>
+          <strong>Free Delivery</strong>
+          <span>Nationwide via Paxi, Uber, Aramex</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <i class="fas fa-shield-alt"></i>
+        <div>
+          <strong>100% Authentic</strong>
+          <span>Guaranteed genuine products</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <i class="fab fa-whatsapp"></i>
+        <div>
+          <strong>WhatsApp Support</strong>
+          <span>+27 62 731 3073</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div>
+          <strong>South Africa</strong>
+          <span>Serving nationwide</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="boxedAboutUs.html">About Us</a> |
+      <a href="boxedContacts.html">Contact</a> |
+      <a href="#returns">Returns & Refunds</a>
+    </div>
+    <p>© 2025 Boxed Sneakers. Premium kicks. <i class="fas fa-heart" style="color:#ff5e5e;"></i></p>
+  </footer>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -739,16 +825,16 @@
 <script>
   (function(){
     const products = [
-      { name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"] },
-      { name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4a.jpg"] },
-      { name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"] },
-      { name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"] },
-      { name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"] },
-      { name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12a.jpg"] },
-      { name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"] },
-      { name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"] },
-      { name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"] },
-      { name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15a.jpg"] }
+      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"], stock: "In stock" },
+      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4.jpg"], stock: "In stock" },
+      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"], stock: "In stock" },
+      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"], stock: "In stock" },
+      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"], stock: "In stock" },
+      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12.jpg"], stock: "In stock" },
+      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"], stock: "In stock" },
+      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"], stock: "In stock" },
+      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"], stock: "In stock" },
+      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15.jpg"], stock: "In stock" }
     ];
 
     let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
@@ -791,12 +877,12 @@
       localStorage.setItem('sneakerCart', JSON.stringify(cart));
     }
 
-    function addToCart(name, price, image) {
-      const existing = cart.find(item => item.name === name);
+    function addToCart(name, price, image, id) {
+      const existing = cart.find(item => item.id === id);
       if (existing) {
         existing.quantity += 1;
       } else {
-        cart.push({ name, price, quantity: 1, image });
+        cart.push({ id, name, price, quantity: 1, image });
       }
       saveCart();
       updateCartCount();
@@ -842,10 +928,10 @@
           <h3>${prod.name}</h3>
           <div class="product-meta">
             <div class="product-price">R ${prod.price.toFixed(2)}</div>
-            <div class="mini-tag">${prod.tag}</div>
+            <div class="stock-status">${prod.stock}</div>
           </div>
           <div class="delivery"><i class="fas fa-truck"></i> Free delivery nationwide</div>
-          <button class="add-btn" type="button" data-name="${prod.name}" data-price="${prod.price}" data-image="${prod.images[0]}">Add to bag</button>
+          <button class="add-btn" type="button" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}" data-image="${prod.images[0]}">Add to bag</button>
         `;
 
         card.querySelector('.quick-view-btn').addEventListener('click', () => {
@@ -862,7 +948,7 @@
           btn.disabled = true;
           btn.textContent = 'Adding...';
 
-          addToCart(btn.dataset.name, parseFloat(btn.dataset.price), btn.dataset.image);
+          addToCart(btn.dataset.name, parseFloat(btn.dataset.price), btn.dataset.image, parseInt(btn.dataset.id));
 
           setTimeout(() => {
             btn.disabled = false;
@@ -919,7 +1005,7 @@
 
     modalAddToCart.addEventListener('click', () => {
       if (!currentModalProduct) return;
-      addToCart(currentModalProduct.name, currentModalProduct.price, currentModalProduct.images[0]);
+      addToCart(currentModalProduct.name, currentModalProduct.price, currentModalProduct.images[0], currentModalProduct.id);
       closeModal();
     });
 

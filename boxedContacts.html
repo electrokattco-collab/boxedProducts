@@ -523,6 +523,56 @@
       .contact-form{padding:16px;}
       .video-container video{border-radius:22px;}
     }
+
+    footer{
+      text-align:center;
+      margin-top:50px;
+      color:#2c3a5e;
+      padding-bottom:8px;
+    }
+
+    .trust-section{
+      display:flex;
+      justify-content:space-around;
+      gap:20px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:0.9rem;
+    }
+
+    .trust-item i{
+      color:var(--accent);
+      font-size:1.2rem;
+    }
+
+    .trust-item strong{
+      display:block;
+      color:#1e1e2a;
+    }
+
+    .trust-item span{
+      color:#586883;
+    }
+
+    .footer-links{
+      margin-bottom:10px;
+    }
+
+    .footer-links a{
+      color:#586883;
+      text-decoration:none;
+      margin:0 8px;
+    }
+
+    .footer-links a:hover{
+      color:var(--accent);
+    }
   </style>
 </head>
 <body>
@@ -531,6 +581,7 @@
       <a href="index.html" class="logo"><i class="fas fa-shoe-prints"></i> boxedSneaks</a>
       <div class="nav-links">
         <a href="index.html"><i class="fas fa-house"></i> Home</a>
+        <a href="boxedAboutUs.html"><i class="fas fa-info-circle"></i> About</a>
         <a href="boxedCart.html"><i class="fas fa-bag-shopping"></i> Cart</a>
         <a href="boxedContacts.html"><i class="fas fa-address-book"></i> Contact</a>
       </div>
@@ -674,7 +725,42 @@
     </section>
 
     <footer>
-      <p>© 2025 Boxed Sneakers. All rights reserved.</p>
+      <div class="trust-section">
+        <div class="trust-item">
+          <i class="fas fa-truck"></i>
+          <div>
+            <strong>Free Delivery</strong>
+            <span>Nationwide via Paxi, Uber, Aramex</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <strong>100% Authentic</strong>
+            <span>Guaranteed genuine products</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <i class="fab fa-whatsapp"></i>
+          <div>
+            <strong>WhatsApp Support</strong>
+            <span>+27 62 731 3073</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <strong>South Africa</strong>
+            <span>Serving nationwide</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="boxedAboutUs.html">About Us</a> |
+        <a href="boxedContacts.html">Contact</a> |
+        <a href="#returns">Returns & Refunds</a>
+      </div>
+      <p>© 2025 Boxed Sneakers. Premium kicks. <i class="fas fa-heart" style="color:#ff5e5e;"></i></p>
     </footer>
   </div>
 
@@ -705,7 +791,24 @@
       }
 
       if (form && submitBtn) {
-        form.addEventListener('submit', () => {
+        form.addEventListener('submit', (event) => {
+          const name = form.querySelector('[name="name"]').value.trim();
+          const email = form.querySelector('[name="email"]').value.trim();
+          const message = form.querySelector('[name="message"]').value.trim();
+
+          if (!name || !email || !message) {
+            event.preventDefault();
+            showToast('Please fill in all required fields');
+            return;
+          }
+
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            event.preventDefault();
+            showToast('Please enter a valid email address');
+            return;
+          }
+
           submitBtn.disabled = true;
           submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Sending...</span>';
         });
