@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BoxedProducts Admin-Managed Product Schema",
+  "description": "Dynamic product schema supporting multiple categories with admin tracking fields",
+  "type": "object",
+  "required": ["id", "name", "price", "category", "inventoryStatus", "lastUpdated"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (e.g., 'sneaker-001', 'electronic-042')"
+    },
+    "name": {
+      "type": "string",
+      "description": "Product display name"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Price in ZAR"
+    },
+    "description": {
+      "type": "string",
+      "description": "Product description/subtitle"
+    },
+    "images": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Array of image URLs/paths"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["shoes", "electronics", "digital", "furniture", "clothing", "accessories"],
+      "description": "Product category determines UI fields"
+    },
+    "tag": {
+      "type": "string",
+      "description": "Display tag (Trending, Premium, Sale, etc.)"
+    },
+    "inventoryStatus": {
+      "type": "string",
+      "enum": ["inStock", "lowStock", "outOfStock", "discontinued"],
+      "description": "Current inventory status"
+    },
+    "stockQuantity": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Available quantity"
+    },
+    "adminNotes": {
+      "type": "string",
+      "description": "Internal notes for admin team"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last modification"
+    },
+    "updatedBy": {
+      "type": "string",
+      "description": "Admin user who made last update"
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether product is visible on storefront"
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Category-specific attributes (dynamic fields)",
+      "properties": {
+        "shoes": {
+          "type": "object",
+          "properties": {
+            "sizes": { "type": "array", "items": { "type": "number" } },
+            "colors": { "type": "array", "items": { "type": "string" } },
+            "brand": { "type": "string" },
+            "material": { "type": "string" }
+          }
+        },
+        "electronics": {
+          "type": "object",
+          "properties": {
+            "brand": { "type": "string" },
+            "warranty": { "type": "string" },
+            "batteryLife": { "type": "string" },
+            "connectivity": { "type": "string" },
+            "specifications": { "type": "object" }
+          }
+        },
+        "digital": {
+          "type": "object",
+          "properties": {
+            "format": { "type": "string" },
+            "duration": { "type": "string" },
+            "downloadableFiles": { "type": "number" },
+            "fileSize": { "type": "string" },
+            "accessDuration": { "type": "string" }
+          }
+        },
+        "furniture": {
+          "type": "object",
+          "properties": {
+            "material": { "type": "string" },
+            "dimensions": { "type": "string" },
+            "weight": { "type": "string" },
+            "assemblyRequired": { "type": "boolean" }
+          }
+        },
+        "clothing": {
+          "type": "object",
+          "properties": {
+            "sizes": { "type": "array", "items": { "type": "string" } },
+            "colors": { "type": "array", "items": { "type": "string" } },
+            "material": { "type": "string" },
+            "careInstructions": { "type": "string" }
+          }
+        },
+        "accessories": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "material": { "type": "string" },
+            "dimensions": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "categoryFieldMap": {
+    "shoes": {
+      "label": "Footwear",
+      "icon": "fa-shoe-prints",
+      "fields": [
+        { "name": "sizes", "type": "multiNumber", "label": "Available Sizes", "placeholder": "3,4,5,6,7,8,9,10" },
+        { "name": "colors", "type": "multiText", "label": "Available Colors", "placeholder": "White,Black,Red,Blue" },
+        { "name": "brand", "type": "text", "label": "Brand", "placeholder": "Nike, Adidas, etc." },
+        { "name": "material", "type": "text", "label": "Material", "placeholder": "Leather, Canvas, etc." }
+      ]
+    },
+    "electronics": {
+      "label": "Electronics",
+      "icon": "fa-headphones",
+      "fields": [
+        { "name": "brand", "type": "text", "label": "Brand", "placeholder": "Sony, Bose, etc." },
+        { "name": "warranty", "type": "text", "label": "Warranty Period", "placeholder": "1 year" },
+        { "name": "batteryLife", "type": "text", "label": "Battery Life", "placeholder": "30 hours" },
+        { "name": "connectivity", "type": "text", "label": "Connectivity", "placeholder": "Bluetooth 5.0" }
+      ]
+    },
+    "digital": {
+      "label": "Digital Products",
+      "icon": "fa-download",
+      "fields": [
+        { "name": "format", "type": "select", "label": "Format", "options": ["Video Course", "PDF", "Audio", "Software", "Template"] },
+        { "name": "duration", "type": "text", "label": "Duration", "placeholder": "5 hours" },
+        { "name": "downloadableFiles", "type": "number", "label": "Number of Files", "placeholder": "3" },
+        { "name": "fileSize", "type": "text", "label": "Total File Size", "placeholder": "2.5 GB" },
+        { "name": "accessDuration", "type": "text", "label": "Access Duration", "placeholder": "Lifetime, 1 year, etc." }
+      ]
+    },
+    "furniture": {
+      "label": "Furniture",
+      "icon": "fa-couch",
+      "fields": [
+        { "name": "material", "type": "text", "label": "Material", "placeholder": "Oak Wood & Steel" },
+        { "name": "dimensions", "type": "text", "label": "Dimensions", "placeholder": "120cm x 30cm x 180cm" },
+        { "name": "weight", "type": "text", "label": "Weight", "placeholder": "15 kg" },
+        { "name": "assemblyRequired", "type": "checkbox", "label": "Assembly Required" }
+      ]
+    },
+    "clothing": {
+      "label": "Clothing",
+      "icon": "fa-tshirt",
+      "fields": [
+        { "name": "sizes", "type": "multiText", "label": "Available Sizes", "placeholder": "XS,S,M,L,XL,XXL" },
+        { "name": "colors", "type": "multiText", "label": "Available Colors", "placeholder": "Red,Blue,Black" },
+        { "name": "material", "type": "text", "label": "Material", "placeholder": "Cotton, Polyester, etc." },
+        { "name": "careInstructions", "type": "textarea", "label": "Care Instructions", "placeholder": "Machine wash cold..." }
+      ]
+    },
+    "accessories": {
+      "label": "Accessories",
+      "icon": "fa-glasses",
+      "fields": [
+        { "name": "type", "type": "text", "label": "Accessory Type", "placeholder": "Bag, Watch, etc." },
+        { "name": "material", "type": "text", "label": "Material", "placeholder": "Leather, Metal, etc." },
+        { "name": "dimensions", "type": "text", "label": "Dimensions", "placeholder": "10cm x 5cm x 2cm" }
+      ]
+    }
+  }
+}

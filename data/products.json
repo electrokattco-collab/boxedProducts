@@ -4,11 +4,20 @@
     "name": "Nike Airforce 1",
     "price": 1999.99,
     "description": "Chunky everyday statement pair",
-    "images": ["sneaker1.jpg", "sneaker1a.jpg"],
+    "category": "shoes",
+    "tag": "Trending",
+    "images": ["assets/sneaker1.jpg", "assets/sneaker1a.jpg"],
+    "inventoryStatus": "inStock",
+    "stockQuantity": 25,
+    "adminNotes": "Popular item, monitor stock levels",
+    "lastUpdated": "2025-01-15T10:30:00Z",
+    "updatedBy": "admin",
+    "isVisible": true,
     "attributes": {
-      "category": "shoes",
       "sizes": [3, 4, 5, 6, 7, 8, 9, 10],
-      "colors": ["White", "Black", "Red", "Blue"]
+      "colors": ["White", "Black", "Red", "Blue"],
+      "brand": "Nike",
+      "material": "Leather"
     }
   },
   {
@@ -16,9 +25,18 @@
     "name": "Premium Wireless Headphones",
     "price": 2499.99,
     "description": "Noise-cancelling over-ear headphones with premium sound.",
-    "images": ["headphones1.jpg"],
+    "category": "electronics",
+    "tag": "Premium",
+    "images": ["assets/headphones1.jpg"],
+    "inventoryStatus": "lowStock",
+    "stockQuantity": 5,
+    "adminNotes": "Restock order placed, arriving next week",
+    "lastUpdated": "2025-01-14T16:45:00Z",
+    "updatedBy": "admin",
+    "isVisible": true,
     "attributes": {
-      "category": "electronics",
+      "brand": "Sony",
+      "warranty": "2 years",
       "batteryLife": "30 hours",
       "connectivity": "Bluetooth 5.0"
     }
@@ -28,12 +46,21 @@
     "name": "Sneaker Customization Masterclass",
     "price": 499.99,
     "description": "Learn to design and paint custom sneakers from scratch in this comprehensive video course.",
-    "images": ["course1.jpg"],
+    "category": "digital",
+    "tag": "New Arrival",
+    "images": ["assets/course1.jpg"],
+    "inventoryStatus": "inStock",
+    "stockQuantity": 999,
+    "adminNotes": "Digital product - unlimited stock",
+    "lastUpdated": "2025-01-10T09:00:00Z",
+    "updatedBy": "admin",
+    "isVisible": true,
     "attributes": {
-      "category": "digital",
       "format": "Video Course",
       "duration": "5 hours",
-      "downloadableFiles": 3
+      "downloadableFiles": 3,
+      "fileSize": "2.5 GB",
+      "accessDuration": "Lifetime"
     }
   },
   {
@@ -41,11 +68,62 @@
     "name": "Minimalist Display Shelf",
     "price": 3200.00,
     "description": "A sleek, modern shelf perfect for displaying your sneaker collection.",
-    "images": ["shelf1.jpg"],
+    "category": "furniture",
+    "tag": "Popular",
+    "images": ["assets/shelf1.jpg"],
+    "inventoryStatus": "outOfStock",
+    "stockQuantity": 0,
+    "adminNotes": "Discontinued by supplier, find alternative",
+    "lastUpdated": "2025-01-12T11:20:00Z",
+    "updatedBy": "admin",
+    "isVisible": false,
     "attributes": {
-      "category": "furniture",
       "material": "Oak Wood & Steel",
-      "dimensions": "120cm x 30cm x 180cm"
+      "dimensions": "120cm x 30cm x 180cm",
+      "weight": "15 kg",
+      "assemblyRequired": true
+    }
+  },
+  {
+    "id": "shoes-2",
+    "name": "Adidas Stan Smith",
+    "price": 1349.99,
+    "description": "Clean minimalist lifestyle icon",
+    "category": "shoes",
+    "tag": "Classic",
+    "images": ["assets/sneaker4.jpg"],
+    "inventoryStatus": "inStock",
+    "stockQuantity": 42,
+    "adminNotes": "Steady seller, good margins",
+    "lastUpdated": "2025-01-15T08:15:00Z",
+    "updatedBy": "admin",
+    "isVisible": true,
+    "attributes": {
+      "sizes": [3, 4, 5, 6, 7, 8, 9, 10],
+      "colors": ["White", "Green", "Navy"],
+      "brand": "Adidas",
+      "material": "Synthetic Leather"
+    }
+  },
+  {
+    "id": "clothing-1",
+    "name": "Boxed Sneakers Limited Hoodie",
+    "price": 899.99,
+    "description": "Premium cotton hoodie with embroidered logo",
+    "category": "clothing",
+    "tag": "Limited Edition",
+    "images": ["assets/hoodie1.jpg"],
+    "inventoryStatus": "lowStock",
+    "stockQuantity": 8,
+    "adminNotes": "Limited run - only 50 made",
+    "lastUpdated": "2025-01-13T14:30:00Z",
+    "updatedBy": "admin",
+    "isVisible": true,
+    "attributes": {
+      "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
+      "colors": ["Black", "Grey", "Navy"],
+      "material": "100% Cotton",
+      "careInstructions": "Machine wash cold, tumble dry low"
     }
   }
 ]
