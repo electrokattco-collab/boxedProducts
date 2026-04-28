@@ -51,7 +51,7 @@
     body{
       background:
         radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
-        url('back.jpg');
+        url('assets/back.jpg');
       background-size:cover;
       background-attachment:fixed;
       min-height:100vh;
@@ -844,7 +844,7 @@
 
         <div class="proof-card">
           <p><i class="fas fa-receipt"></i> <strong>Send proof of payment</strong> after you transfer using the contact options below.</p>
-          <img src="testimony.jpg" alt="Proof of payment example">
+          <img src="assets/testimony.jpg'" alt="Proof of payment example">
         </div>
 
         <div class="contact-links">
@@ -853,7 +853,7 @@
           <a href="mailto:boxedsneaks@gmail.com"><i class="fas fa-envelope"></i> Email</a>
         </div>
 
-        <button class="action-btn" id="confirmPaymentBtn" style="background:#0f3b2c; width:100%;"><i class="fas fa-check-circle"></i> Confirm Payment</button>
+        <button class="action-btn" id="confirmPaymentBtn" style="background:#0f3b2c; width:100%;"><i class="fas fa-check-circle"></i> I've paid – send invoice</button>
         <p class="secure-note">🔒 Secure · VAT inclusive · Invoice sent after confirmation</p>
       </section>
     </aside>
@@ -968,7 +968,7 @@
 
         html += `
           <article class="cart-item-row">
-            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='sneaker1.jpg'">
+            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='assets/sneaker1.jpg'">
             <div class="cart-item-info">
               <div class="cart-item-title">${item.name}</div>
               <div class="cart-item-sub">${variantText || 'Premium sneaker selected for checkout'}</div>
@@ -1073,5 +1073,6 @@
     renderCart();
   })();
 </script>
+<script src="globalAlert.js"></script>
 </body>
 </html>

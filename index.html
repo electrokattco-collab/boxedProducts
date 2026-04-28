@@ -16,6 +16,7 @@
   <meta name="description" content="Premium sneakers with fast ordering, mobile-friendly browsing, and smooth add-to-cart experience.">
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="src/globalAlert.js"></script>
   <style>
     :root{
       --bg-dark:rgba(10,15,25,0.78);
@@ -50,7 +51,7 @@
     body{
       background:
         radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
-        url('back.jpg');
+        url('assets/back.jpg');
       background-size:cover;
       background-attachment:fixed;
       min-height:100vh;
@@ -833,7 +834,7 @@
     </div>
   </section>
 
-  <div class="product-grid" id="productGrid"></div>
+  <div id="product-grid" class="product-container"></div>
 
   <div class="mobile-quick-bar">
     <div class="mobile-quick-inner">
@@ -917,29 +918,40 @@
   </div>
 </div>
 
-<script>
-  (function(){
-    const products = [
-      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Red", "Blue"] },
-      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Green", "Navy"] },
-      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Grey"] },
-      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Purple"] },
-      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Red", "Orange"] },
-      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "Bred", "Fire Red"] },
-      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Pink"] },
-      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Wheat", "Brown", "Black"] },
-      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Grey", "Black", "White"] },
-      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Checkered"] }
-    ];
-
-    let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
+<script type="module">
+  // Import Firebase config and ProductRenderer for live cloud sync
+  import './src/firebaseConfig.js';
+  import { productRenderer } from './src/productRenderer.js';
+  
+  (async function(){
+    // Load products from Firebase with real-time sync
+    let products = [];
     let activeTag = 'all';
     let currentSearch = '';
     let currentModalProduct = null;
     let selectedSize = null;
     let selectedColor = null;
 
-    const productGrid = document.getElementById('productGrid');
+    // Initialize product renderer
+    await productRenderer.initialize();
+
+    // Subscribe to real-time product updates via onSnapshot
+    // Products appear instantly when admin hits "Save"
+    productRenderer.subscribeToStorefront((updatedProducts) => {
+      products = updatedProducts.map(p => ({
+        ...p,
+        subtitle: p.description,
+        stock: p.inventoryStatus === 'inStock' ? 'In stock' : p.inventoryStatus,
+        sizes: p.attributes?.sizes || [],
+        colors: p.attributes?.colors || []
+      }));
+      renderProducts();
+    });
+
+    // State management
+    let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
+
+    const productGrid = document.getElementById('product-grid');
     const cartCountSpan = document.getElementById('cartCountDisplay');
     const toastContainer = document.getElementById('toastContainer');
     const searchInput = document.getElementById('searchInput');
@@ -1001,13 +1013,12 @@
 
     function renderProducts() {
       const filteredProducts = getFilteredProducts();
-      productGrid.innerHTML = '';
-
+      
       if (filteredProducts.length === 0) {
         productGrid.innerHTML = `
           <div class="empty-state">
-            <h3>No sneakers found</h3>
-            <p>Try a different search or switch back to another filter.</p>
+            <h3>No products found</h3>
+            <p>Try a different search or check back later for new arrivals!</p>
           </div>
         `;
         resultsCopy.textContent = 'No products matched your search';
@@ -1015,41 +1026,32 @@
       }
 
       resultsCopy.textContent = 'Showing ' + filteredProducts.length + ' product' + (filteredProducts.length === 1 ? '' : 's');
-
-      filteredProducts.forEach(prod => {
-        const card = document.createElement('article');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-top">
-            <span class="product-badge">${prod.tag}</span>
-            <button class="quick-view-btn" type="button" aria-label="Quick view ${prod.name}">
-              <i class="fas fa-expand"></i>
-            </button>
-          </div>
-          <img src="${prod.images[0]}" alt="${prod.name}" onerror="this.src='sneaker1.jpg'">
-          <h3>${prod.name}</h3>
-          <div class="product-meta">
-            <div class="product-price">R ${prod.price.toFixed(2)}</div>
-            <div class="stock-status">${prod.stock}</div>
-          </div>
-          <div class="delivery"><i class="fas fa-truck"></i> Free delivery nationwide</div>
-          <button class="add-btn" type="button" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}" data-image="${prod.images[0]}">Add to bag</button>
-        `;
-
-        card.querySelector('.quick-view-btn').addEventListener('click', () => {
-          openModal(prod);
+      
+      // Use productRenderer for live cloud-synced rendering via onSnapshot
+      productRenderer.renderProductGrid(filteredProducts, '#product-grid');
+      
+      // Re-attach event listeners to newly rendered cards
+      attachCardListeners();
+    }
+    
+    function attachCardListeners() {
+      // Quick view buttons
+      productGrid.querySelectorAll('.quick-view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const card = e.target.closest('.product-card');
+          const productId = card.dataset.productId;
+          const product = products.find(p => p.id === productId);
+          if (product) openModal(product);
         });
+      });
 
-        card.querySelector('img').addEventListener('click', () => {
-          openModal(prod);
+      // Add to cart buttons
+      productGrid.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const productId = e.target.dataset.id;
+          const product = products.find(p => p.id === productId);
+          if (product) openModal(product);
         });
-
-        card.querySelector('.add-btn').addEventListener('click', (event) => {
-          // Open modal to select size and color
-          openModal(prod);
-        });
-
-        productGrid.appendChild(card);
       });
     }
 
@@ -1190,7 +1192,7 @@
       if (event.target === modal) closeModal();
     });
 
-    renderProducts();
+    // Initial cart count update
     updateCartCount();
   })();
 </script>
