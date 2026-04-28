@@ -51,7 +51,7 @@
     body{
       background:
         radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
-        url('back.jpg');
+        url('assets/back.jpg');
       background-size:cover;
       background-attachment:fixed;
       min-height:100vh;
@@ -844,7 +844,7 @@
 
         <div class="proof-card">
           <p><i class="fas fa-receipt"></i> <strong>Send proof of payment</strong> after you transfer using the contact options below.</p>
-          <img src="testimony.jpg" alt="Proof of payment example">
+          <img src="assets/testimony.jpg'" alt="Proof of payment example">
         </div>
 
         <div class="contact-links">
@@ -968,7 +968,7 @@
 
         html += `
           <article class="cart-item-row">
-            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='sneaker1.jpg'">
+            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='assets/sneaker1.jpg'">
             <div class="cart-item-info">
               <div class="cart-item-title">${item.name}</div>
               <div class="cart-item-sub">${variantText || 'Premium sneaker selected for checkout'}</div>
@@ -1073,5 +1073,6 @@
     renderCart();
   })();
 </script>
+<script src="globalAlert.js"></script>
 </body>
 </html>

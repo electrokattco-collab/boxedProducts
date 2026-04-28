@@ -50,7 +50,7 @@
     body{
       background:
         radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
-        url('back.jpg');
+        url('assets/back.jpg');
       background-size:cover;
       background-attachment:fixed;
       min-height:100vh;
@@ -920,16 +920,16 @@
 <script>
   (function(){
     const products = [
-      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["sneaker1.jpg","sneaker1a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Red", "Blue"] },
-      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["sneaker4.jpg","sneaker4.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Green", "Navy"] },
-      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["sneaker10.jpg","sneaker10a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Grey"] },
-      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["sneaker9.jpg","sneaker9a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Purple"] },
-      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["sneaker11.jpg","sneaker11a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Red", "Orange"] },
-      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["sneaker12.jpg","sneaker12.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "Bred", "Fire Red"] },
-      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["sneaker13.jpg","sneaker13a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Pink"] },
-      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["sneaker16.jpg","sneaker16a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Wheat", "Brown", "Black"] },
-      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["sneaker14.jpg","sneaker14a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Grey", "Black", "White"] },
-      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["sneaker15.jpg","sneaker15.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Checkered"] }
+      { id: 1, name: "Nike Airforce 1", price: 1999.99, tag: "Trending", subtitle: "Chunky everyday statement pair", images: ["assets/sneaker1.jpg","assets/sneaker1a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Red", "Blue"] },
+      { id: 2, name: "Adidas Stan Smith", price: 1349.99, tag: "Classic", subtitle: "Clean minimalist lifestyle icon", images: ["assets/sneaker4.jpg","assets/sneaker4.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Green", "Navy"] },
+      { id: 3, name: "New Balance 550", price: 1299.99, tag: "Popular", subtitle: "Retro basketball-inspired staple", images: ["assets/sneaker10.jpg","assets/sneaker10a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Grey"] },
+      { id: 4, name: "Nike UpTempo", price: 1899.99, tag: "Basketball", subtitle: "Bold hoops energy for daily wear", images: ["assets/sneaker9.jpg","assets/sneaker9a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Purple"] },
+      { id: 5, name: "Nike Dunk High", price: 2599.99, tag: "Street", subtitle: "High-top streetwear favourite", images: ["assets/sneaker11.jpg","assets/sneaker11a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Red", "Orange"] },
+      { id: 6, name: "Air Jordan 4 Retro", price: 1949.99, tag: "Premium", subtitle: "Premium look with iconic shape", images: ["assets/sneaker12.jpg","assets/sneaker12.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "Bred", "Fire Red"] },
+      { id: 7, name: "PUMA Mayze WMNS", price: 1399.99, tag: "Women", subtitle: "Platform style with feminine edge", images: ["assets/sneaker13.jpg","assets/sneaker13a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["White", "Black", "Pink"] },
+      { id: 8, name: "Timberland Boots", price: 2799.99, tag: "Boots", subtitle: "Durable boot built for standout fits", images: ["assets/sneaker16.jpg","assets/sneaker16a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Wheat", "Brown", "Black"] },
+      { id: 9, name: "Airmax 95", price: 1599.99, tag: "Running", subtitle: "Comfort-first classic with attitude", images: ["assets/sneaker14.jpg","assets/sneaker14a.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Grey", "Black", "White"] },
+      { id: 10, name: "Vans Old Skool", price: 1099.99, tag: "Skate", subtitle: "Skate heritage with easy styling", images: ["assets/sneaker15.jpg","assets/sneaker15.jpg"], stock: "In stock", sizes: [3,4,5,6,7,8,9,10], colors: ["Black", "White", "Checkered"] }
     ];
 
     let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
@@ -1026,7 +1026,7 @@
               <i class="fas fa-expand"></i>
             </button>
           </div>
-          <img src="${prod.images[0]}" alt="${prod.name}" onerror="this.src='sneaker1.jpg'">
+          <img src="${prod.images[0]}" alt="${prod.name}" onerror="this.src='assets/sneaker1.jpg'">
           <h3>${prod.name}</h3>
           <div class="product-meta">
             <div class="product-price">R ${prod.price.toFixed(2)}</div>
@@ -1194,5 +1194,7 @@
     updateCartCount();
   })();
 </script>
+<script src="src/globalAlert.js"></script>
+<script src="src/dataFetcher.js"></script>
 </body>
 </html>
