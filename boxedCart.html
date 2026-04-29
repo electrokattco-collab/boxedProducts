@@ -14,6 +14,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cart & Payment · boxedSneaks</title>
   <meta name="description" content="Review your sneaker cart, adjust quantities, and complete payment details on a mobile-friendly checkout page.">
+  
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://www.googletagmanager.com 'unsafe-inline';
+      style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';
+      img-src 'self' data: https://*.firebaseio.com https://*.googleapis.com blob:;
+      connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.google-analytics.com;
+      font-src 'self' https://cdnjs.cloudflare.com;
+      frame-src 'self' https://*.firebaseapp.com;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+  ">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root{
@@ -51,7 +66,7 @@
     body{
       background:
         radial-gradient(circle at 10% 20%, rgba(245,247,251,0.96), rgba(230,240,255,0.82)),
-        url('assets/back.jpg');
+        url('back.jpg');
       background-size:cover;
       background-attachment:fixed;
       min-height:100vh;
@@ -844,7 +859,7 @@
 
         <div class="proof-card">
           <p><i class="fas fa-receipt"></i> <strong>Send proof of payment</strong> after you transfer using the contact options below.</p>
-          <img src="assets/testimony.jpg'" alt="Proof of payment example">
+          <img src="testimony.jpg" alt="Proof of payment example">
         </div>
 
         <div class="contact-links">
@@ -909,7 +924,9 @@
 <script>
   (function(){
 
-    let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
+    // Cart data structure version for integrity checks
+    const CART_VERSION = 1;
+    const CART_STORAGE_KEY = 'sneakerCart';
 
     const cartItemsDiv = document.getElementById('cartItemsList');
     const cartTotalSpan = document.getElementById('cartTotal');
@@ -922,6 +939,102 @@
     const proceedPaymentBtn = document.getElementById('proceedPaymentBtn');
     const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
 
+    // XSS Mitigation Helper
+    function escapeHTML(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/[&<>'"]/g, tag => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[tag]));
+    }
+
+    // Validate cart item structure
+    function isValidCartItem(item) {
+      return item && 
+             typeof item === 'object' &&
+             typeof item.id === 'string' &&
+             typeof item.name === 'string' &&
+             typeof item.price === 'number' &&
+             typeof item.quantity === 'number' &&
+             item.quantity > 0 &&
+             item.price >= 0;
+    }
+
+    // Load cart with integrity checks
+    function loadCart() {
+      try {
+        const rawData = localStorage.getItem(CART_STORAGE_KEY);
+        if (!rawData) return [];
+        
+        const parsed = JSON.parse(rawData);
+        
+        // Handle new format with metadata
+        let items;
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.items)) {
+          items = parsed.items;
+        } else if (Array.isArray(parsed)) {
+          // Handle legacy format (plain array)
+          items = parsed;
+        } else {
+          return [];
+        }
+        
+        // Validate and sanitize each item
+        const validItems = items.filter(isValidCartItem).map(item => ({
+          id: String(item.id).substring(0, 100),
+          name: String(item.name).substring(0, 200),
+          price: Math.max(0, parseFloat(item.price) || 0),
+          quantity: Math.min(99, Math.max(1, parseInt(item.quantity) || 1)),
+          image: item.image ? String(item.image).substring(0, 500) : '',
+          size: item.size ? String(item.size).substring(0, 20) : null,
+          color: item.color ? String(item.color).substring(0, 50) : null
+        }));
+        
+        // If we filtered out invalid items, save the cleaned cart
+        if (validItems.length !== items.length) {
+          console.warn('[Cart] Removed invalid items from cart');
+          cart = validItems;
+          saveCart();
+        }
+        
+        return validItems;
+      } catch (e) {
+        console.error('[Cart] Failed to load cart:', e);
+        return [];
+      }
+    }
+
+    // Save cart with integrity metadata
+    function saveCart() {
+      try {
+        // Sanitize before saving
+        const sanitizedCart = cart.filter(isValidCartItem).map(item => ({
+          id: String(item.id),
+          name: String(item.name),
+          price: parseFloat(item.price) || 0,
+          quantity: parseInt(item.quantity) || 1,
+          image: item.image ? String(item.image) : '',
+          size: item.size ? String(item.size) : null,
+          color: item.color ? String(item.color) : null
+        }));
+        
+        // Add metadata for integrity
+        const cartData = {
+          items: sanitizedCart,
+          version: CART_VERSION,
+          savedAt: new Date().toISOString(),
+          checksum: sanitizedCart.reduce((sum, item) => sum + item.quantity, 0)
+        };
+        
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartData));
+      } catch (e) {
+        console.error('[Cart] Failed to save cart:', e);
+        showToast('Could not save cart. Storage may be full.');
+      }
+    }
+
+    // Initialize cart
+    let cart = loadCart();
+
     function showToast(message) {
       if (!toastContainer) return;
       const toast = document.createElement('div');
@@ -929,10 +1042,6 @@
       toast.textContent = message;
       toastContainer.appendChild(toast);
       setTimeout(() => toast.remove(), 2600);
-    }
-
-    function saveCart() {
-      localStorage.setItem('sneakerCart', JSON.stringify(cart));
     }
 
     function updateCounts(total, count) {
@@ -965,13 +1074,15 @@
         count += item.quantity;
 
         const variantText = (item.size || item.color) ? ` | ${item.size ? 'Size: ' + item.size : ''}${item.size && item.color ? ' | ' : ''}${item.color ? 'Color: ' + item.color : ''}`.trim() : '';
+        const safeName = escapeHTML(item.name);
+        const safeImage = escapeHTML(item.image);
 
         html += `
           <article class="cart-item-row">
-            <img src="${item.image}" class="cart-item-img" alt="${item.name}" onerror="this.src='assets/sneaker1.jpg'">
+            <img src="${safeImage}" class="cart-item-img" alt="${safeName}" onerror="this.src='sneaker1.jpg'">
             <div class="cart-item-info">
-              <div class="cart-item-title">${item.name}</div>
-              <div class="cart-item-sub">${variantText || 'Premium sneaker selected for checkout'}</div>
+              <div class="cart-item-title">${safeName}</div>
+              <div class="cart-item-sub">${escapeHTML(variantText) || 'Premium sneaker selected for checkout'}</div>
               <div class="item-meta">
                 <span class="meta-pill">R ${item.price.toFixed(2)} each</span>
                 <span class="meta-pill">Subtotal: R ${itemTotal.toFixed(2)}</span>

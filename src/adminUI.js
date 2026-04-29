@@ -1,6 +1,7 @@
 // adminUI.js
 // Dynamic UI Generator for Admin Dashboard
 // Maintains Data-Driven Architecture - generates fields based on category schema
+// XSS-SAFE: All dynamic content is escaped before insertion
 
 class AdminUI {
     constructor() {
@@ -24,6 +25,21 @@ class AdminUI {
         }
     }
 
+    // ==================== XSS PROTECTION ====================
+    
+    /**
+     * Escape HTML to prevent XSS attacks
+     * @private
+     * @param {string} str - String to escape
+     * @returns {string} Escaped HTML-safe string
+     */
+    _escapeHtml(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     // ==================== DYNAMIC FORM GENERATION ====================
 
     // Generate form fields based on product category
@@ -41,7 +57,7 @@ class AdminUI {
         header.className = 'category-header';
         header.innerHTML = `
             <i class="fas ${config.icon}"></i>
-            <span>${config.label} Attributes</span>
+            <span>${this._escapeHtml(config.label)} Attributes</span>
         `;
         container.appendChild(header);
 
@@ -309,39 +325,47 @@ class AdminUI {
                             { label: 'Unknown', color: '#999' };
 
         const categoryConfig = this.categoryFieldMap?.[product.category] || { label: product.category, icon: 'fa-box' };
+        
+        // Escape all dynamic content to prevent XSS
+        const safeName = this._escapeHtml(product.name);
+        const safeId = this._escapeHtml(product.id);
+        const safeNotes = product.adminNotes ? this._escapeHtml(product.adminNotes) : '';
+        const safeUpdatedBy = this._escapeHtml(product.updatedBy || 'Unknown');
+        const safeCategoryLabel = this._escapeHtml(categoryConfig.label);
+        const safeStatusLabel = this._escapeHtml(statusConfig.label);
 
         row.innerHTML = `
-            <td><input type="checkbox" class="row-checkbox" value="${product.id}"></td>
+            <td><input type="checkbox" class="row-checkbox" value="${safeId}"></td>
             <td>
                 <img src="${product.images?.[0] || 'assets/placeholder.jpg'}" 
-                     alt="${product.name}" 
+                     alt="${safeName}" 
                      class="product-thumb"
                      onerror="this.src='assets/placeholder.jpg'">
             </td>
             <td>
                 <div class="product-info">
-                    <strong>${product.name}</strong>
-                    <span class="product-id">${product.id}</span>
-                    ${product.adminNotes ? `<i class="fas fa-sticky-note note-indicator" title="${product.adminNotes}"></i>` : ''}
+                    <strong>${safeName}</strong>
+                    <span class="product-id">${safeId}</span>
+                    ${safeNotes ? `<i class="fas fa-sticky-note note-indicator" title="${safeNotes}"></i>` : ''}
                 </div>
             </td>
             <td>
                 <span class="category-badge">
                     <i class="fas ${categoryConfig.icon}"></i>
-                    ${categoryConfig.label}
+                    ${safeCategoryLabel}
                 </span>
             </td>
             <td>R ${parseFloat(product.price).toFixed(2)}</td>
             <td>${product.stockQuantity || 0}</td>
             <td>
                 <span class="status-badge" style="background: ${statusConfig.color}">
-                    ${statusConfig.label}
+                    ${safeStatusLabel}
                 </span>
             </td>
             <td>
                 <div class="update-info">
                     <span>${this.formatDate(product.lastUpdated)}</span>
-                    <small>by ${product.updatedBy || 'Unknown'}</small>
+                    <small>by ${safeUpdatedBy}</small>
                 </div>
             </td>
             <td>
@@ -374,7 +398,7 @@ class AdminUI {
 
         if (callbacks.onDelete) {
             deleteBtn.addEventListener('click', () => {
-                if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+                if (confirm(`Are you sure you want to delete "${safeName}"?`)) {
                     callbacks.onDelete(product);
                 }
             });
@@ -442,6 +466,12 @@ class AdminUI {
         const modal = document.createElement('div');
         modal.className = 'admin-modal';
         modal.id = 'productModal';
+        
+        // Escape values for safe insertion
+        const safeId = this._escapeHtml(product?.id || '');
+        const safeName = this._escapeHtml(product?.name || '');
+        const safeDesc = this._escapeHtml(product?.description || '');
+        const safeNotes = this._escapeHtml(product?.adminNotes || '');
 
         modal.innerHTML = `
             <div class="modal-overlay"></div>
@@ -458,7 +488,7 @@ class AdminUI {
                             <div class="form-group">
                                 <label>Product ID</label>
                                 <input type="text" name="id" class="form-control" 
-                                       value="${product?.id || ''}" 
+                                       value="${safeId}" 
                                        ${isEdit ? 'readonly' : ''}
                                        placeholder="auto-generated if empty">
                             </div>
@@ -466,7 +496,7 @@ class AdminUI {
                             <div class="form-group">
                                 <label>Name *</label>
                                 <input type="text" name="name" class="form-control" 
-                                       value="${product?.name || ''}" required>
+                                       value="${safeName}" required>
                             </div>
 
                             <div class="form-row">
@@ -485,7 +515,7 @@ class AdminUI {
 
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea name="description" class="form-control" rows="3">${product?.description || ''}</textarea>
+                                <textarea name="description" class="form-control" rows="3">${safeDesc}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -524,7 +554,7 @@ class AdminUI {
                             <div class="form-group">
                                 <label>Admin Notes</label>
                                 <textarea name="adminNotes" class="form-control" rows="3" 
-                                          placeholder="Internal notes...">${product?.adminNotes || ''}</textarea>
+                                          placeholder="Internal notes...">${safeNotes}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -615,21 +645,21 @@ class AdminUI {
         
         return Object.entries(this.categoryFieldMap).map(([key, config]) => `
             <option value="${key}" ${selected === key ? 'selected' : ''}>
-                ${config.label}
+                ${this._escapeHtml(config.label)}
             </option>
         `).join('');
     }
 
     generateTagOptions(selected) {
         return AdminConfig.tags.map(tag => `
-            <option value="${tag}" ${selected === tag ? 'selected' : ''}>${tag}</option>
+            <option value="${tag}" ${selected === tag ? 'selected' : ''}>${this._escapeHtml(tag)}</option>
         `).join('');
     }
 
     generateStatusOptions(selected) {
         return AdminConfig.inventoryStatuses.map(status => `
             <option value="${status.value}" ${selected === status.value ? 'selected' : ''}>
-                ${status.label}
+                ${this._escapeHtml(status.label)}
             </option>
         `).join('');
     }
@@ -639,7 +669,7 @@ class AdminUI {
         
         return images.map((img, idx) => `
             <div class="image-preview">
-                <img src="${img}" alt="Product ${idx + 1}">
+                <img src="${this._escapeHtml(img)}" alt="Product ${idx + 1}">
                 <button type="button" class="btn-remove-image" data-index="${idx}">
                     <i class="fas fa-times"></i>
                 </button>
@@ -718,7 +748,7 @@ class AdminUI {
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
             <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
+            <span>${this._escapeHtml(message)}</span>
         `;
         
         container.appendChild(toast);
@@ -738,7 +768,7 @@ class AdminUI {
         overlay.innerHTML = `
             <div class="loading-spinner">
                 <i class="fas fa-circle-notch fa-spin"></i>
-                <span>${message}</span>
+                <span>${this._escapeHtml(message)}</span>
             </div>
         `;
         document.body.appendChild(overlay);

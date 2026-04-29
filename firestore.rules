@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Check if user has admin role
+    // NOTE: Requires custom claims setup via Firebase Console or Admin SDK
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.admin == true || 
+         request.auth.token.role == 'admin');
+    }
+    
+    // Helper function: Validate product data structure
+    function isValidProduct(data) {
+      return data.keys().hasAll(['name', 'price', 'category']) &&
+        data.name is string &&
+        data.name.size() > 0 &&
+        data.price is number &&
+        data.price >= 0 &&
+        data.category is string;
+    }
+    
+    // Products Collection
+    match /products/{productId} {
+      // Public read access for products (storefront)
+      allow read: if true;
+      
+      // Only admins can create/update/delete products
+      allow create: if isAdmin() && isValidProduct(request.resource.data);
+      allow update: if isAdmin() && isValidProduct(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    // Orders Collection (Future-ready structure)
+    match /orders/{orderId} {
+      // Users can create their own orders
+      // Data validation ensures they can't spoof the userId field
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.keys().hasAll(['items', 'total', 'status', 'createdAt']);
+      
+      // Users can only read their own orders
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Only admins can update/delete orders
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Admin Logs Collection (Admin-only access)
+    match /adminLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false; // Logs are immutable
+    }
+    
+    // User Profiles Collection (Future-proofing)
+    match /users/{userId} {
+      // Users can read/write their own profile
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

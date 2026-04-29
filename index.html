@@ -15,6 +15,21 @@
   <title>boxedsneaks_RSA · premium sneakers from trusted brands</title>
   <meta name="description" content="Premium sneakers with fast ordering, mobile-friendly browsing, and smooth add-to-cart experience.">
   <link rel="icon" href="favicon.ico">
+  
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://www.googletagmanager.com 'unsafe-inline';
+      style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';
+      img-src 'self' data: https://*.firebaseio.com https://*.googleapis.com blob:;
+      connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.google-analytics.com;
+      font-src 'self' https://cdnjs.cloudflare.com;
+      frame-src 'self' https://*.firebaseapp.com;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+  ">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="src/globalAlert.js"></script>
   <style>
@@ -948,8 +963,76 @@
       renderProducts();
     });
 
-    // State management
-    let cart = JSON.parse(localStorage.getItem('sneakerCart')) || [];
+    // State management - Cart with integrity checks
+    const CART_STORAGE_KEY = 'sneakerCart';
+    
+    // Load cart with validation
+    function loadCart() {
+      try {
+        const rawData = localStorage.getItem(CART_STORAGE_KEY);
+        if (!rawData) return [];
+        
+        const parsed = JSON.parse(rawData);
+        let items;
+        
+        // Handle new format with metadata
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.items)) {
+          items = parsed.items;
+        } else if (Array.isArray(parsed)) {
+          items = parsed; // Legacy format
+        } else {
+          return [];
+        }
+        
+        // Validate and sanitize
+        return items.filter(item => 
+          item && typeof item === 'object' &&
+          typeof item.id === 'string' &&
+          typeof item.name === 'string' &&
+          typeof item.price === 'number' &&
+          typeof item.quantity === 'number'
+        ).map(item => ({
+          id: String(item.id).substring(0, 100),
+          name: String(item.name).substring(0, 200),
+          price: Math.max(0, parseFloat(item.price) || 0),
+          quantity: Math.min(99, Math.max(1, parseInt(item.quantity) || 1)),
+          image: item.image ? String(item.image).substring(0, 500) : '',
+          size: item.size ? String(item.size).substring(0, 20) : null,
+          color: item.color ? String(item.color).substring(0, 50) : null
+        }));
+      } catch (e) {
+        console.error('[Cart] Failed to load:', e);
+        return [];
+      }
+    }
+    
+    // Save cart with metadata
+    function saveCart() {
+      try {
+        const sanitizedCart = cart.map(item => ({
+          id: String(item.id),
+          name: String(item.name),
+          price: parseFloat(item.price) || 0,
+          quantity: parseInt(item.quantity) || 1,
+          image: item.image ? String(item.image) : '',
+          size: item.size ? String(item.size) : null,
+          color: item.color ? String(item.color) : null
+        }));
+        
+        const cartData = {
+          items: sanitizedCart,
+          version: 1,
+          savedAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartData));
+      } catch (e) {
+        console.error('[Cart] Failed to save:', e);
+        showToast('Could not save cart. Storage may be full.');
+      }
+    }
+    
+    let cart = loadCart();
 
     const productGrid = document.getElementById('product-grid');
     const cartCountSpan = document.getElementById('cartCountDisplay');
@@ -986,9 +1069,7 @@
       cartCountSpan.textContent = count;
     }
 
-    function saveCart() {
-      localStorage.setItem('sneakerCart', JSON.stringify(cart));
-    }
+    // saveCart() function defined above with integrity checks
 
     function addToCart(name, price, image, id, size, color) {
       // Different variants of same product are separate cart items

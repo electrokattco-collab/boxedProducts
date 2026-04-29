@@ -2,6 +2,7 @@
 // CRUD Operations for Admin Dashboard - Firebase Firestore (Modular SDK v9+)
 // Uses: addDoc, getDocs, updateDoc, deleteDoc, onSnapshot for real-time sync
 // Maintains Data-Driven Architecture with dynamic category support
+// SECURITY: Uses Firebase Auth for user identification, no localStorage fallbacks
 
 import { 
     collection, 
@@ -375,11 +376,27 @@ class ProductAdmin {
         }
     }
 
-    // ==================== UTILITY METHODS ====================
+    // ==================== AUTH & USER METHODS ====================
 
+    /**
+     * Get current authenticated user from Firebase Auth
+     * SECURITY: Returns 'system' only if auth is unavailable (should never happen in production)
+     * @returns {string} User email or UID for audit logging
+     */
     getCurrentUser() {
-        return localStorage.getItem('adminUser') || 'admin';
+        // Access auth from window object (set by firebaseConfig.js)
+        const authModule = window._firebaseAuth;
+        if (authModule && authModule.auth && authModule.auth.currentUser) {
+            const user = authModule.auth.currentUser;
+            // Prefer email for readability in logs, fallback to UID
+            return user.email || user.uid;
+        }
+        // This should only happen if called before auth initializes
+        console.warn('[AdminCRUD] No authenticated user found, using system fallback');
+        return 'system';
     }
+
+    // ==================== LOGGING ====================
 
     /**
      * Log admin actions to Firestore
@@ -419,6 +436,8 @@ class ProductAdmin {
             return { success: false, error: error.message };
         }
     }
+
+    // ==================== EXPORT/IMPORT ====================
 
     // Export products to JSON (for backup)
     async exportToJSON() {

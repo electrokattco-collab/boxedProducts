@@ -2,6 +2,7 @@
 // Storefront Product Renderer - Fetches from Firebase Firestore with Real-Time Sync
 // Uses onSnapshot for live updates from admin panel
 // Maintains Data-Driven Architecture - renders any product type dynamically
+// XSS-SAFE: All user-generated content is escaped before rendering
 
 import { 
     collection, 
@@ -164,36 +165,58 @@ class ProductRenderer {
         }
     }
 
+    // ==================== XSS PROTECTION ====================
+    
+    /**
+     * Escape HTML to prevent XSS attacks
+     * @private
+     * @param {string} str - String to escape
+     * @returns {string} Escaped HTML-safe string
+     */
+    _escapeHtml(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     // ==================== DYNAMIC RENDERING ====================
 
     /**
      * Generate HTML for a product card - matches static site exactly
      * Shows: product name, price, image (NO quantity display)
+     * XSS-SAFE: All dynamic content is escaped
      */
     renderProductCard(product) {
         const price = parseFloat(product.price).toFixed(2);
         const image = product.images?.[0] || 'assets/placeholder.jpg';
         
-        // Match exact static site structure
+        // Escape all user-generated content to prevent XSS
+        const safeId = this._escapeHtml(product.id);
+        const safeName = this._escapeHtml(product.name);
+        const safeTag = this._escapeHtml(product.tag || 'New');
+        const safeImage = this._escapeHtml(image);
+        
+        // Match exact static site structure with escaped values
         return `
-            <article class="product-card" data-product-id="${product.id}">
+            <article class="product-card" data-product-id="${safeId}">
                 <div class="product-top">
-                    <span class="product-badge">${product.tag || 'New'}</span>
-                    <button class="quick-view-btn" type="button" aria-label="Quick view ${product.name}">
+                    <span class="product-badge">${safeTag}</span>
+                    <button class="quick-view-btn" type="button" aria-label="Quick view ${safeName}">
                         <i class="fas fa-expand"></i>
                     </button>
                 </div>
-                <img src="${image}" alt="${product.name}" onerror="this.src='assets/placeholder.jpg'">
-                <h3>${product.name}</h3>
+                <img src="${safeImage}" alt="${safeName}" onerror="this.src='assets/placeholder.jpg'">
+                <h3>${safeName}</h3>
                 <div class="product-meta">
                     <div class="product-price">R ${price}</div>
                 </div>
                 <div class="delivery"><i class="fas fa-truck"></i> Free delivery nationwide</div>
                 <button class="add-btn" type="button" 
-                        data-id="${product.id}" 
-                        data-name="${product.name}" 
+                        data-id="${safeId}" 
+                        data-name="${safeName}" 
                         data-price="${price}"
-                        data-image="${image}"
+                        data-image="${safeImage}"
                         ${product.inventoryStatus === 'outOfStock' ? 'disabled' : ''}>
                     ${product.inventoryStatus === 'outOfStock' ? 'Out of Stock' : 'Add to bag'}
                 </button>

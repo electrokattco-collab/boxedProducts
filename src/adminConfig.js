@@ -20,12 +20,6 @@ const AdminConfig = {
         categories: 'categories'
     },
 
-    // Simple password protection (change for production use)
-    auth: {
-        passwordHash: '$2a$10$YourHashedPasswordHere',
-        sessionDuration: 8 * 60 * 60 * 1000 // 8 hours in milliseconds
-    },
-
     // [cite: 283, 337] Image upload settings for Firebase Storage
     upload: {
         maxFileSize: 5 * 1024 * 1024, // 5MB
