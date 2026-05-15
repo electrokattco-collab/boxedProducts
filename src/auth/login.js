@@ -119,7 +119,12 @@ export function redirectAfterLogin(isAdmin, redirectUrl = null) {
         return;
     }
 
-    window.location.href = isAdmin ? 'admin.html' : 'index.html';
+    // Determine base path based on current location
+    // If in pages/ directory, go up one level; otherwise stay at root
+    const isInPagesDir = window.location.pathname.includes('/pages/');
+    const basePath = isInPagesDir ? '../' : '';
+    
+    window.location.href = isAdmin ? basePath + 'admin.html' : basePath + 'index.html';
 }
 
 /**

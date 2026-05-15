@@ -130,6 +130,17 @@ class AuthGuard {
     }
 
     /**
+     * Get proper path based on current directory
+     */
+    getPath(path) {
+        const isInPagesDir = window.location.pathname.includes('/pages/');
+        if (isInPagesDir && !path.startsWith('../')) {
+            return '../' + path;
+        }
+        return path;
+    }
+
+    /**
      * Redirect to login page
      */
     redirectToLogin() {
@@ -138,7 +149,7 @@ class AuthGuard {
         if (!this.isLoginPage()) {
             sessionStorage.setItem('postLoginRedirect', currentUrl);
         }
-        window.location.href = this.options.loginPage;
+        window.location.href = this.getPath(this.options.loginPage);
     }
 
     /**
@@ -146,9 +157,9 @@ class AuthGuard {
      */
     redirectBasedOnRole() {
         if (this.isAdmin) {
-            window.location.href = this.options.adminPage;
+            window.location.href = this.getPath(this.options.adminPage);
         } else {
-            window.location.href = this.options.customerPage;
+            window.location.href = this.getPath(this.options.customerPage);
         }
     }
 
@@ -163,7 +174,8 @@ class AuthGuard {
         if (this.isLoginPage() && this.isAuthenticated()) {
             const redirectUrl = sessionStorage.getItem('postLoginRedirect');
             sessionStorage.removeItem('postLoginRedirect');
-            window.location.href = redirectUrl || (this.isAdmin ? this.options.adminPage : this.options.customerPage);
+            const targetPage = this.isAdmin ? this.options.adminPage : this.options.customerPage;
+            window.location.href = redirectUrl || this.getPath(targetPage);
             return;
         }
 
@@ -173,7 +185,7 @@ class AuthGuard {
                 this.redirectToLogin();
             } else {
                 // User is authenticated but not admin
-                window.location.href = this.options.customerPage;
+                window.location.href = this.getPath(this.options.customerPage);
             }
             return;
         }
@@ -189,7 +201,7 @@ class AuthGuard {
             if (!this.isAuthenticated()) {
                 this.redirectToLogin();
             } else {
-                window.location.href = this.options.customerPage;
+                window.location.href = this.getPath(this.options.customerPage);
             }
             return;
         }
