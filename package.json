@@ -12,7 +12,7 @@
     "test:auth": "jest --testPathPattern=auth",
     "test:product": "jest --testPathPattern=product",
     "test:ui": "jest --testPathPattern=ui",
-    "build": "mkdir -p dist && cp -r *.html pages assets src data dist/ 2>/dev/null || xcopy /E /I /Y *.html pages assets src data dist\"",
+    "build": "mkdir -p dist && cp *.html dist/ && cp -r pages assets src data dist/",
     "build:clean": "rm -rf dist || rmdir /S /Q dist"
   },
   "keywords": [
