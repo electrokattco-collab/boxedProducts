@@ -15,6 +15,7 @@ import {
     doc
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { db } from './firebaseConfig.js';
+import { sanitizeProduct, escapeHtml } from './utils/sanitization.js';
 
 /**
  * ProductRenderer - Handles all storefront product rendering with live Firebase sync
@@ -172,12 +173,20 @@ class ProductRenderer {
      * @private
      * @param {string} str - String to escape
      * @returns {string} Escaped HTML-safe string
+     * @deprecated Use escapeHtml from utils/sanitization.js
      */
     _escapeHtml(str) {
-        if (typeof str !== 'string') return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
+        return escapeHtml(str);
+    }
+    
+    /**
+     * Sanitize product data before rendering
+     * @private
+     * @param {Object} product - Raw product data
+     * @returns {Object} Sanitized product
+     */
+    _sanitizeProduct(product) {
+        return sanitizeProduct(product);
     }
 
     // ==================== DYNAMIC RENDERING ====================
@@ -185,40 +194,37 @@ class ProductRenderer {
     /**
      * Generate HTML for a product card - matches static site exactly
      * Shows: product name, price, image (NO quantity display)
-     * XSS-SAFE: All dynamic content is escaped
+     * XSS-SAFE: All dynamic content is escaped and sanitized
      */
     renderProductCard(product) {
-        const price = parseFloat(product.price).toFixed(2);
-        const image = product.images?.[0] || 'assets/placeholder.jpg';
+        // Sanitize entire product first
+        const sanitized = this._sanitizeProduct(product);
         
-        // Escape all user-generated content to prevent XSS
-        const safeId = this._escapeHtml(product.id);
-        const safeName = this._escapeHtml(product.name);
-        const safeTag = this._escapeHtml(product.tag || 'New');
-        const safeImage = this._escapeHtml(image);
+        const price = parseFloat(sanitized.price).toFixed(2);
+        const image = sanitized.images?.[0] || 'assets/placeholder.jpg';
         
-        // Match exact static site structure with escaped values
+        // Build card with sanitized data
         return `
-            <article class="product-card" data-product-id="${safeId}">
+            <article class="product-card" data-product-id="${sanitized.id}">
                 <div class="product-top">
-                    <span class="product-badge">${safeTag}</span>
-                    <button class="quick-view-btn" type="button" aria-label="Quick view ${safeName}">
+                    <span class="product-badge">${sanitized.tag || 'New'}</span>
+                    <button class="quick-view-btn" type="button" aria-label="Quick view ${sanitized.name}">
                         <i class="fas fa-expand"></i>
                     </button>
                 </div>
-                <img src="${safeImage}" alt="${safeName}" onerror="this.src='assets/placeholder.jpg'">
-                <h3>${safeName}</h3>
+                <img src="${image}" alt="${sanitized.name}" onerror="this.src='assets/placeholder.jpg'">
+                <h3>${sanitized.name}</h3>
                 <div class="product-meta">
                     <div class="product-price">R ${price}</div>
                 </div>
                 <div class="delivery"><i class="fas fa-truck"></i> Free delivery nationwide</div>
                 <button class="add-btn" type="button" 
-                        data-id="${safeId}" 
-                        data-name="${safeName}" 
+                        data-id="${sanitized.id}" 
+                        data-name="${sanitized.name}" 
                         data-price="${price}"
-                        data-image="${safeImage}"
-                        ${product.inventoryStatus === 'outOfStock' ? 'disabled' : ''}>
-                    ${product.inventoryStatus === 'outOfStock' ? 'Out of Stock' : 'Add to bag'}
+                        data-image="${image}"
+                        ${sanitized.inventoryStatus === 'outOfStock' ? 'disabled' : ''}>
+                    ${sanitized.inventoryStatus === 'outOfStock' ? 'Out of Stock' : 'Add to bag'}
                 </button>
             </article>
         `;

@@ -31,7 +31,11 @@
   ">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="src/globalAlert.js"></script>
+  <link rel="stylesheet" href="src/styles/customerAuth.css">
+  <script type="module">
+    import { initGlobalAlert } from './src/globalAlert.js';
+    initGlobalAlert();
+  </script>
   <style>
     :root{
       --bg-dark:rgba(10,15,25,0.78);

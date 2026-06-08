@@ -26,7 +26,10 @@ import {
     getDownloadURL,
     deleteObject
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
-import { db, storage } from './firebaseConfig.js';
+import { db, storage, auth } from './services/firebaseConfig.js';
+import { validateProduct } from './utils/validation.js';
+import { sanitizeProduct } from './utils/sanitization.js';
+import { handleFirebaseError } from './services/errorHandler.js';
 
 class ProductAdmin {
     constructor() {
@@ -81,23 +84,26 @@ class ProductAdmin {
     /**
      * Create a new product in Firestore
      * Uses: addDoc() for auto-generated ID or setDoc() for custom ID
+     * Validates and sanitizes all input data
      */
     async createProduct(productData) {
         try {
-            // Validate required fields
-            const required = ['name', 'price', 'category'];
-            for (const field of required) {
-                if (!productData[field]) {
-                    throw new Error(`Required field missing: ${field}`);
-                }
+            // Validate product data
+            const validation = validateProduct(productData);
+            if (!validation.isValid) {
+                const errorMessages = validation.errors.map(e => `${e.field}: ${e.message}`).join(', ');
+                throw new Error(`Validation failed: ${errorMessages}`);
             }
+
+            // Sanitize product data
+            const sanitizedData = sanitizeProduct(productData);
 
             // Add admin tracking fields with server timestamp
             const enrichedData = {
-                ...productData,
-                inventoryStatus: productData.inventoryStatus || 'inStock',
-                stockQuantity: productData.stockQuantity || 10,
-                isVisible: productData.isVisible !== undefined ? productData.isVisible : true,
+                ...sanitizedData,
+                inventoryStatus: sanitizedData.inventoryStatus || 'inStock',
+                stockQuantity: sanitizedData.stockQuantity || 10,
+                isVisible: sanitizedData.isVisible !== undefined ? sanitizedData.isVisible : true,
                 lastUpdated: serverTimestamp(),
                 createdAt: serverTimestamp(),
                 updatedBy: this.getCurrentUser()
@@ -105,8 +111,8 @@ class ProductAdmin {
 
             // If ID provided, use doc() + set(), otherwise addDoc() for auto-ID
             let docRef;
-            if (productData.id) {
-                docRef = doc(this.productsCollection, productData.id);
+            if (sanitizedData.id) {
+                docRef = doc(this.productsCollection, sanitizedData.id);
                 await setDoc(docRef, enrichedData);
             } else {
                 docRef = await addDoc(this.productsCollection, enrichedData);
@@ -122,7 +128,7 @@ class ProductAdmin {
             };
         } catch (error) {
             console.error('[AdminCRUD] Create failed:', error);
-            return { success: false, error: error.message };
+            return handleFirebaseError('createProduct', error, { log: true, notify: false });
         }
     }
 
@@ -384,10 +390,9 @@ class ProductAdmin {
      * @returns {string} User email or UID for audit logging
      */
     getCurrentUser() {
-        // Access auth from window object (set by firebaseConfig.js)
-        const authModule = window._firebaseAuth;
-        if (authModule && authModule.auth && authModule.auth.currentUser) {
-            const user = authModule.auth.currentUser;
+        // Access auth directly from imported firebase config
+        if (auth && auth.currentUser) {
+            const user = auth.currentUser;
             // Prefer email for readability in logs, fallback to UID
             return user.email || user.uid;
         }

@@ -830,6 +830,9 @@
       }
     })();
   </script>
-<script src="src/globalAlert.js"></script>
+<script type="module">
+    import { initGlobalAlert } from './src/globalAlert.js';
+    initGlobalAlert();
+  </script>
 </body>
 </html>
