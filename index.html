@@ -962,6 +962,19 @@
     buttonContainerId: 'authButtonContainer'
   });
   
+  // Defensive: Remove any inline onclick from logout button (fixes cached old code)
+  setTimeout(() => {
+    const logoutBtn = document.querySelector('#logoutBtn');
+    if (logoutBtn && logoutBtn.hasAttribute('onclick')) {
+      console.log('[Fix] Removing inline onclick from logout button');
+      logoutBtn.removeAttribute('onclick');
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.customerAuth?.logout();
+      });
+    }
+  }, 500);
+  
   (async function(){
     // Load products from Firebase with real-time sync
     let products = [];

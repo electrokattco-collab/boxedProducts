@@ -87,7 +87,13 @@ class CustomerAuth {
             // Attach event listener to logout button
             const logoutBtn = container.querySelector('#logoutBtn');
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => this.logout());
+                // Remove any inline onclick (defensive against cached old code)
+                logoutBtn.removeAttribute('onclick');
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.logout();
+                });
             }
         } else {
             container.innerHTML = `
