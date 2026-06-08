@@ -948,9 +948,10 @@
 
 <script type="module">
   // Import Firebase config and ProductRenderer for live cloud sync
-  import './src/firebaseConfig.js';
-  import { productRenderer } from './src/productRenderer.js';
-  import { customerAuth } from './src/auth/customerAuth.js';
+  // Cache-busting timestamp: 20250608
+  import './src/firebaseConfig.js?cb=20250608';
+  import { productRenderer } from './src/productRenderer.js?cb=20250608';
+  import { customerAuth } from './src/auth/customerAuth.js?cb=20250608';
   
   // Expose to window for inline onclick handlers
   window.customerAuth = customerAuth;
