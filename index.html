@@ -946,6 +946,44 @@
   </div>
 </div>
 
+<!-- Pre-load fix: Define customerAuth placeholder to prevent errors -->
+<script>
+  window.customerAuth = {
+    logout: function() {
+      console.log('[Placeholder] Logout called, waiting for real auth...');
+      setTimeout(() => {
+        if (window.customerAuth && window.customerAuth.logout !== arguments.callee) {
+          window.customerAuth.logout();
+        }
+      }, 500);
+    }
+  };
+  
+  // Watch for logout button being added and fix it immediately
+  const logoutFixer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) { // Element
+          const logoutBtn = node.matches?.('#logoutBtn') ? node : node.querySelector?.('#logoutBtn');
+          if (logoutBtn && logoutBtn.hasAttribute('onclick')) {
+            console.log('[MutationObserver] Removing inline onclick');
+            logoutBtn.removeAttribute('onclick');
+          }
+        }
+      });
+    });
+  });
+  
+  // Start watching as soon as DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      logoutFixer.observe(document.body, { childList: true, subtree: true });
+    });
+  } else {
+    logoutFixer.observe(document.body, { childList: true, subtree: true });
+  }
+</script>
+
 <script type="module">
   // Import Firebase config and ProductRenderer for live cloud sync
   // Cache-busting timestamp: 20250608
