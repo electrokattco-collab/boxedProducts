@@ -965,15 +965,33 @@
   // Defensive: Remove any inline onclick from logout button (fixes cached old code)
   setTimeout(() => {
     const logoutBtn = document.querySelector('#logoutBtn');
-    if (logoutBtn && logoutBtn.hasAttribute('onclick')) {
-      console.log('[Fix] Removing inline onclick from logout button');
-      logoutBtn.removeAttribute('onclick');
+    if (logoutBtn) {
+      if (logoutBtn.hasAttribute('onclick')) {
+        console.log('[Fix] Removing inline onclick from logout button');
+        logoutBtn.removeAttribute('onclick');
+      }
+      // Always attach fresh event listener
       logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.customerAuth?.logout();
+        e.stopPropagation();
+        if (window.customerAuth) {
+          window.customerAuth.logout();
+        } else {
+          console.error('customerAuth not loaded yet');
+        }
       });
     }
-  }, 500);
+  }, 100);
+  
+  // Global handler for any logout buttons (catches dynamically added ones)
+  document.addEventListener('click', (e) => {
+    const logoutBtn = e.target.closest('#logoutBtn, .logout-btn');
+    if (logoutBtn && window.customerAuth) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.customerAuth.logout();
+    }
+  });
   
   (async function(){
     // Load products from Firebase with real-time sync
