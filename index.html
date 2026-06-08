@@ -17,6 +17,9 @@
   <link rel="icon" href="favicon.ico">
   
   <!-- Content Security Policy - Hardened for Unified Auth -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://accounts.google.com https://apis.google.com 'unsafe-inline';
@@ -31,7 +34,7 @@
   ">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="src/styles/customerAuth.css?v=2">
+  <link rel="stylesheet" href="src/styles/customerAuth.css">
   <script type="module">
     import { initGlobalAlert } from './src/globalAlert.js';
     initGlobalAlert();
@@ -945,9 +948,9 @@
 
 <script type="module">
   // Import Firebase config and ProductRenderer for live cloud sync
-  import './src/firebaseConfig.js?v=2';
-  import { productRenderer } from './src/productRenderer.js?v=2';
-  import { customerAuth } from './src/auth/customerAuth.js?v=2';
+  import './src/firebaseConfig.js';
+  import { productRenderer } from './src/productRenderer.js';
+  import { customerAuth } from './src/auth/customerAuth.js';
   
   // Expose to window for inline onclick handlers
   window.customerAuth = customerAuth;
