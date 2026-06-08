@@ -949,6 +949,9 @@
   import { productRenderer } from './src/productRenderer.js';
   import { customerAuth } from './src/auth/customerAuth.js';
   
+  // Expose to window for inline onclick handlers
+  window.customerAuth = customerAuth;
+  
   // Initialize customer auth (shows login/logout button)
   customerAuth.init({
     showAuthButton: true,
