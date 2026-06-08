@@ -78,11 +78,17 @@ class CustomerAuth {
                     <span class="user-email">${this.escapeHtml(this.user.email)}</span>
                     ${this.isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
                     ${adminLink}
-                    <button class="auth-btn logout-btn" onclick="customerAuth.logout()">
+                    <button class="auth-btn logout-btn" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             `;
+            
+            // Attach event listener to logout button
+            const logoutBtn = container.querySelector('#logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => this.logout());
+            }
         } else {
             container.innerHTML = `
                 <a href="pages/login.html" class="auth-btn login-btn">
