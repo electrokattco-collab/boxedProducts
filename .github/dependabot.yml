@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # Root dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "electrokattco-collab"
+    labels:
+      - "dependencies"
+      - "javascript"
+    allow:
+      - dependency-type: "all"
+
+  # Scripts directory dependencies
+  - package-ecosystem: "npm"
+    directory: "/scripts"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "electrokattco-collab"
+    labels:
+      - "dependencies"
+      - "firebase"
+    allow:
+      - dependency-type: "all"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    reviewers:
+      - "electrokattco-collab"
+    labels:
+      - "ci/cd"
