@@ -78,11 +78,23 @@ class CustomerAuth {
                     <span class="user-email">${this.escapeHtml(this.user.email)}</span>
                     ${this.isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
                     ${adminLink}
-                    <button class="auth-btn logout-btn" onclick="customerAuth.logout()">
+                    <button class="auth-btn logout-btn" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             `;
+            
+            // Attach event listener to logout button
+            const logoutBtn = container.querySelector('#logoutBtn');
+            if (logoutBtn) {
+                // Remove any inline onclick (defensive against cached old code)
+                logoutBtn.removeAttribute('onclick');
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.logout();
+                });
+            }
         } else {
             container.innerHTML = `
                 <a href="pages/login.html" class="auth-btn login-btn">
@@ -138,100 +150,15 @@ class CustomerAuth {
         return div.innerHTML;
     }
 
-    /**
-     * Add auth-aware CSS styles
-     * Call this once to inject styles
-     */
-    injectStyles() {
-        if (document.getElementById('customer-auth-styles')) return;
-        
-        const styles = document.createElement('style');
-        styles.id = 'customer-auth-styles';
-        styles.textContent = `
-            .user-menu {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-            
-            .user-email {
-                font-size: 0.875rem;
-                color: #f0f3fa;
-                max-width: 150px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-            
-            .admin-badge {
-                background: #22c55e;
-                color: white;
-                font-size: 0.625rem;
-                font-weight: 700;
-                padding: 2px 8px;
-                border-radius: 999px;
-                text-transform: uppercase;
-            }
-            
-            .auth-btn {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 18px;
-                border-radius: 999px;
-                font-weight: 500;
-                text-decoration: none;
-                transition: all 0.25s ease;
-                cursor: pointer;
-                border: none;
-                font-size: 0.875rem;
-            }
-            
-            .login-btn {
-                background: rgba(255, 140, 60, 0.25);
-                color: #fff;
-            }
-            
-            .login-btn:hover {
-                background: rgba(255, 140, 60, 0.4);
-            }
-            
-            .logout-btn {
-                background: rgba(255, 255, 255, 0.1);
-                color: #f0f3fa;
-            }
-            
-            .logout-btn:hover {
-                background: rgba(239, 68, 68, 0.3);
-                color: #fff;
-            }
-            
-            .admin-link {
-                background: rgba(34, 197, 94, 0.2);
-                color: #4ade80;
-                padding: 10px 14px;
-            }
-            
-            .admin-link:hover {
-                background: rgba(34, 197, 94, 0.35);
-                color: #86efac;
-            }
-            
-            @media (max-width: 768px) {
-                .user-email {
-                    display: none;
-                }
-            }
-        `;
-        document.head.appendChild(styles);
-    }
 }
 
 // Create singleton instance
 const customerAuth = new CustomerAuth();
 
-// Auto-inject styles
-customerAuth.injectStyles();
+// Expose to window for inline onclick handlers
+if (typeof window !== 'undefined') {
+    window.customerAuth = customerAuth;
+}
 
 export { CustomerAuth, customerAuth };
 export default customerAuth;

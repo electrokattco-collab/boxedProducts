@@ -1,5 +1,7 @@
-// globalAlert.js
-// Fixed development alert - positioned at top, non-dismissible, full width
+/**
+ * Global Alert Module
+ * Fixed development alert - positioned at top, non-dismissible, full width
+ */
 
 // Configuration Object
 const AppConfig = {
@@ -7,12 +9,22 @@ const AppConfig = {
     alertMessage: "Site is currently in development. You may experience minor interruptions."
 };
 
-function injectDevAlert() {
+/**
+ * Inject development alert into the DOM
+ * @param {Object} options - Optional configuration override
+ */
+function injectDevAlert(options = {}) {
+    const config = { ...AppConfig, ...options };
+    
     // Only show if the config says developmentMode is true
-    if (!AppConfig.developmentMode) return;
+    if (!config.developmentMode) return;
+
+    // Check if alert already exists
+    if (document.querySelector('.global-dev-alert')) return;
 
     // CSS: Fixed at top, full width, non-dismissible
     const style = document.createElement('style');
+    style.id = 'global-alert-styles';
     style.textContent = `
         .global-dev-alert {
             position: fixed;
@@ -79,15 +91,23 @@ function injectDevAlert() {
     alertDiv.className = 'global-dev-alert';
     alertDiv.innerHTML = `
         <i class="fas fa-exclamation-triangle warning-icon"></i>
-        <span>${AppConfig.alertMessage}</span>
+        <span>${config.alertMessage}</span>
     `;
 
     document.body.appendChild(alertDiv);
 }
 
-// Inject as soon as the DOM is fully loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectDevAlert);
-} else {
-    injectDevAlert();
+/**
+ * Initialize the global alert
+ * Auto-injects when DOM is ready
+ */
+function initGlobalAlert(options = {}) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => injectDevAlert(options));
+    } else {
+        injectDevAlert(options);
+    }
 }
+
+export { AppConfig, injectDevAlert, initGlobalAlert };
+export default initGlobalAlert;

@@ -1184,6 +1184,9 @@
     renderCart();
   })();
 </script>
-<script src="globalAlert.js"></script>
+<script type="module">
+    import { initGlobalAlert } from './src/globalAlert.js';
+    initGlobalAlert();
+  </script>
 </body>
 </html>

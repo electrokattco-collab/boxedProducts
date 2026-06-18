@@ -11,7 +11,9 @@
     "test:integration": "jest --testPathPattern=tests/integration",
     "test:auth": "jest --testPathPattern=auth",
     "test:product": "jest --testPathPattern=product",
-    "test:ui": "jest --testPathPattern=ui"
+    "test:ui": "jest --testPathPattern=ui",
+    "build": "mkdir -p dist && cp *.html dist/ && cp -r pages assets src data dist/",
+    "build:clean": "rm -rf dist || rmdir /S /Q dist"
   },
   "keywords": [
     "e-commerce",
@@ -23,6 +25,7 @@
   "license": "ISC",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.60.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0"
   },

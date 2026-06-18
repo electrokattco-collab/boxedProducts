@@ -16,42 +16,45 @@ import {
 } from '../services/firebaseConfig.js';
 
 import { signInWithGoogle, handleGoogleRedirectResult } from './googleAuth.js';
+import { validateEmail, validatePassword, sanitizeEmail } from '../utils/validation.js';
+import { checkLoginLimit, clearLoginAttempts } from '../utils/rateLimiter.js';
+import { handleFirebaseError } from '../services/errorHandler.js';
 
 /**
- * Validate email format
- */
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-/**
- * Validate password
- */
-function isValidPassword(password) {
-    return password && password.length >= 6;
-}
-
-/**
- * Email/password login
+ * Email/password login with rate limiting and validation
  */
 export async function signInWithEmail(email, password, rememberMe = false) {
-    if (!email || !password) {
-        return { success: false, error: 'Please enter both email and password.' };
+    // Sanitize email
+    const sanitizedEmail = sanitizeEmail(email);
+    
+    // Validate inputs
+    const emailValidation = validateEmail(sanitizedEmail);
+    if (!emailValidation.isValid) {
+        return { success: false, error: emailValidation.message };
     }
 
-    if (!isValidEmail(email)) {
-        return { success: false, error: 'Please enter a valid email address.' };
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+        return { success: false, error: passwordValidation.message };
     }
-
-    if (!isValidPassword(password)) {
-        return { success: false, error: 'Password must be at least 6 characters.' };
+    
+    // Check rate limit
+    const rateLimit = checkLoginLimit(sanitizedEmail);
+    if (!rateLimit.allowed) {
+        return { 
+            success: false, 
+            error: `Too many login attempts. Please try again in ${Math.ceil(rateLimit.resetInMs / 60000)} minutes.`
+        };
     }
 
     try {
         await initializeAuthPersistence(rememberMe);
 
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, sanitizedEmail, password);
         const user = userCredential.user;
+        
+        // Clear failed login attempts on success
+        clearLoginAttempts(sanitizedEmail);
 
         const tokenResult = await getIdTokenResult(user, true);
         const isAdmin = tokenResult?.claims?.isAdmin || false;
@@ -69,29 +72,26 @@ export async function signInWithEmail(email, password, rememberMe = false) {
 
     } catch (error) {
         console.error('[Email Auth] Sign in failed:', error);
-
-        let errorMessage = 'Sign-in failed. Please try again.';
-
+        
+        // Use centralized error handler for consistent messaging
+        const errorResult = handleFirebaseError('login', error, { log: false, notify: false });
+        
+        // Override specific messages for security
+        let errorMessage = errorResult.message;
+        
         switch (error.code) {
             case 'auth/invalid-credential':
             case 'auth/wrong-password':
             case 'auth/user-not-found':
+                // Use generic message to prevent user enumeration
                 errorMessage = 'Invalid email or password.';
                 break;
-            case 'auth/invalid-email':
-                errorMessage = 'Invalid email format.';
-                break;
             case 'auth/user-disabled':
-                errorMessage = 'Account disabled.';
+                errorMessage = 'This account has been disabled. Please contact support.';
                 break;
             case 'auth/too-many-requests':
-                errorMessage = 'Too many attempts. Try later.';
+                errorMessage = 'Too many failed attempts. Please try again later.';
                 break;
-            case 'auth/network-request-failed':
-                errorMessage = 'Network error.';
-                break;
-            default:
-                errorMessage = error.message;
         }
 
         return { success: false, error: errorMessage };

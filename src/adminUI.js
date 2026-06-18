@@ -783,7 +783,5 @@ class AdminUI {
 // Create global instance
 const adminUI = new AdminUI();
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { AdminUI, adminUI };
-}
+export { AdminUI, adminUI };
+export default adminUI;

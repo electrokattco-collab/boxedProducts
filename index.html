@@ -17,6 +17,9 @@
   <link rel="icon" href="favicon.ico">
   
   <!-- Content Security Policy - Hardened for Unified Auth -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://accounts.google.com https://apis.google.com 'unsafe-inline';
@@ -31,7 +34,11 @@
   ">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="src/globalAlert.js"></script>
+  <link rel="stylesheet" href="src/styles/customerAuth.css">
+  <script type="module">
+    import { initGlobalAlert } from './src/globalAlert.js';
+    initGlobalAlert();
+  </script>
   <style>
     :root{
       --bg-dark:rgba(10,15,25,0.78);
@@ -939,16 +946,89 @@
   </div>
 </div>
 
+<!-- Pre-load fix: Define customerAuth placeholder to prevent errors -->
+<script>
+  window.customerAuth = {
+    logout: function() {
+      console.log('[Placeholder] Logout called, waiting for real auth...');
+      setTimeout(() => {
+        if (window.customerAuth && window.customerAuth.logout !== arguments.callee) {
+          window.customerAuth.logout();
+        }
+      }, 500);
+    }
+  };
+  
+  // Watch for logout button being added and fix it immediately
+  const logoutFixer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) { // Element
+          const logoutBtn = node.matches?.('#logoutBtn') ? node : node.querySelector?.('#logoutBtn');
+          if (logoutBtn && logoutBtn.hasAttribute('onclick')) {
+            console.log('[MutationObserver] Removing inline onclick');
+            logoutBtn.removeAttribute('onclick');
+          }
+        }
+      });
+    });
+  });
+  
+  // Start watching as soon as DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      logoutFixer.observe(document.body, { childList: true, subtree: true });
+    });
+  } else {
+    logoutFixer.observe(document.body, { childList: true, subtree: true });
+  }
+</script>
+
 <script type="module">
   // Import Firebase config and ProductRenderer for live cloud sync
-  import './src/firebaseConfig.js';
-  import { productRenderer } from './src/productRenderer.js';
-  import { customerAuth } from './src/auth/customerAuth.js';
+  // Cache-busting timestamp: 20250608
+  import './src/firebaseConfig.js?cb=20250608';
+  import { productRenderer } from './src/productRenderer.js?cb=20250608';
+  import { customerAuth } from './src/auth/customerAuth.js?cb=20250608';
+  
+  // Expose to window for inline onclick handlers
+  window.customerAuth = customerAuth;
   
   // Initialize customer auth (shows login/logout button)
   customerAuth.init({
     showAuthButton: true,
     buttonContainerId: 'authButtonContainer'
+  });
+  
+  // Defensive: Remove any inline onclick from logout button (fixes cached old code)
+  setTimeout(() => {
+    const logoutBtn = document.querySelector('#logoutBtn');
+    if (logoutBtn) {
+      if (logoutBtn.hasAttribute('onclick')) {
+        console.log('[Fix] Removing inline onclick from logout button');
+        logoutBtn.removeAttribute('onclick');
+      }
+      // Always attach fresh event listener
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.customerAuth) {
+          window.customerAuth.logout();
+        } else {
+          console.error('customerAuth not loaded yet');
+        }
+      });
+    }
+  }, 100);
+  
+  // Global handler for any logout buttons (catches dynamically added ones)
+  document.addEventListener('click', (e) => {
+    const logoutBtn = e.target.closest('#logoutBtn, .logout-btn');
+    if (logoutBtn && window.customerAuth) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.customerAuth.logout();
+    }
   });
   
   (async function(){

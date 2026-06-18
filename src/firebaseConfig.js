@@ -66,9 +66,4 @@ export async function signOutAdmin() {
     }
 }
 
-// Expose auth for legacy modules
-if (typeof window !== 'undefined') {
-    window._firebaseAuth = { auth };
-}
-
 console.log('[Firebase] Config loaded (backward compatibility mode)');
