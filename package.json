@@ -13,7 +13,10 @@
     "test:product": "jest --testPathPattern=product",
     "test:ui": "jest --testPathPattern=ui",
     "build": "node scripts/build.js",
-    "build:clean": "rm -rf dist || rmdir /S /Q dist"
+    "build:clean": "rm -rf dist || rmdir /S /Q dist",
+    "optimize": "node scripts/optimize-build.js",
+    "health-check": "node monitoring/health-check.js",
+    "predeploy": "npm run build && npm run optimize"
   },
   "keywords": [
     "e-commerce",

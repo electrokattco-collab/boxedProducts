@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "boxedsneakers",
     "public": "dist",
     "ignore": [
       "firebase.json",
@@ -8,39 +9,55 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/admin",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "/cart",
+        "destination": "/boxedCart.html"
+      },
+      {
+        "source": "/about",
+        "destination": "/boxedAboutUs.html"
+      },
+      {
+        "source": "/contact",
+        "destination": "/boxedContacts.html"
       }
     ],
     "headers": [
       {
-        "source": "/assets/**",
+        "source": "**/*.@(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=31536000"
+            "value": "public, max-age=31536000, immutable"
           }
         ]
       },
       {
-        "source": "/**/*.js",
+        "source": "**/*.@(css|js)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=86400"
+            "value": "public, max-age=604800, must-revalidate"
           }
         ]
       },
       {
-        "source": "/**",
+        "source": "**/*.html",
         "headers": [
           {
-            "key": "X-Content-Type-Options",
-            "value": "nosniff"
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
           },
           {
             "key": "X-Frame-Options",
-            "value": "DENY"
+            "value": "SAMEORIGIN"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
           },
           {
             "key": "X-XSS-Protection",
@@ -49,12 +66,5 @@
         ]
       }
     ]
-  },
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
-  "storage": {
-    "rules": "storage.rules"
   }
 }

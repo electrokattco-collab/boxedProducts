@@ -1,0 +1,58 @@
+# ============================================================================
+# Gcloudignore for Boxed Sneakers
+# Files not uploaded to Google Cloud Build
+# ============================================================================
+
+# Git
+.git
+.gitignore
+
+# Node.js dependencies (installed in container)
+node_modules
+
+# Build outputs (generated in container)
+dist
+build
+
+# Testing
+coverage
+.nyc_output
+test-results/
+playwright-report/
+tests/
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs
+
+# Documentation
+*.md
+!README.md
+
+# Sensitive scripts
+scripts/serviceAccountKey.json
+
+# Misc
+.cache
+.temp
+.tmp
+
+# Local development
+*.local
+
+# Analysis documents (large)
+CLOUD_RUN_ANALYSIS.md

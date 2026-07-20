@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://boxedsneakers.com/sitemap.xml
+
+# Disallow admin area
+Disallow: /admin.html

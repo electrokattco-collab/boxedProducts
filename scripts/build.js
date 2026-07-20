@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build script for Boxed Sneakers
- * Copies static files to the dist directory
+ * Copies static files to the dist directory and optimizes for deployment
  */
 
 const fs = require('fs');
@@ -150,15 +150,37 @@ function verifyBuild() {
   }
 }
 
+// Copy public files (robots.txt, sitemap.xml, etc.)
+function copyPublicFiles() {
+  const publicDir = path.join(rootDir, 'public');
+  if (fs.existsSync(publicDir)) {
+    console.log(`${colors.yellow}📄 Copying public files...${colors.reset}`);
+    
+    const entries = fs.readdirSync(publicDir, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(publicDir, entry.name);
+      const destPath = path.join(distDir, entry.name);
+      
+      if (entry.isFile()) {
+        copyFile(srcPath, destPath);
+        console.log(`  ${colors.green}✓${colors.reset} public/${entry.name}`);
+      }
+    }
+    console.log();
+  }
+}
+
 // Main build process
 function build() {
   try {
     prepareDist();
     copyItems();
+    copyPublicFiles();
     const success = verifyBuild();
     
     if (success) {
       console.log(`\n${colors.green}🚀 Ready for deployment!${colors.reset}`);
+      console.log(`${colors.blue}💡 Run 'npm run optimize' to add compression${colors.reset}`);
       process.exit(0);
     } else {
       process.exit(1);
