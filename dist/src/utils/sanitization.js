@@ -101,10 +101,10 @@ export function sanitizeHtml(html, allowedTags = []) {
                 el.removeAttribute(attr.name);
             }
             
-            // Remove javascript: URLs
+            // Remove dangerous scriptable URLs
             if (attrName === 'href' || attrName === 'src') {
                 const value = attr.value.toLowerCase().trim();
-                if (value.startsWith('javascript:') || value.startsWith('data:')) {
+                if (value.startsWith('javascript:') || value.startsWith('data:') || value.startsWith('vbscript:')) {
                     el.removeAttribute(attr.name);
                 }
             }
