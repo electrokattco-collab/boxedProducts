@@ -1,0 +1,28 @@
+{
+  "$schema": "https://coolify.io/schema.json",
+  "name": "Boxed Sneakers",
+  "description": "Premium sneakers e-commerce platform with Firebase authentication",
+  "type": "dockerfile",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "deploy": {
+    "port": 80,
+    "healthcheck": {
+      "path": "/health",
+      "interval": "30s",
+      "timeout": "5s",
+      "retries": 3,
+      "start_period": "10s"
+    }
+  },
+  "environment": {
+    "NODE_ENV": "production"
+  },
+  "volumes": [],
+  "resources": {
+    "cpu": 0.5,
+    "memory": "512Mi"
+  }
+}

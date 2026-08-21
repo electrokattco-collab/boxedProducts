@@ -1,0 +1,94 @@
+/* Global Styles for Boxed Sneakers React App */
+
+:root {
+  --bg-dark: rgba(10, 15, 25, 0.78);
+  --nav-bg: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --text-main: #1e1e2a;
+  --text-soft: #52627f;
+  --accent: #ff7e3f;
+  --accent-strong: #ff7518;
+  --accent-light: #fff1e8;
+  --primary: #0f1a2c;
+  --primary-soft: #1f2b48;
+  --badge: #1e2b4f;
+  --blue: #0047ab;
+  --shadow-lg: 0 22px 42px rgba(0, 0, 0, 0.16);
+  --shadow-md: 0 16px 28px rgba(0, 0, 0, 0.1);
+  --radius-xl: 40px;
+  --radius-lg: 28px;
+  --radius-md: 22px;
+  --radius-pill: 999px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(245, 247, 251, 0.96), rgba(230, 240, 255, 0.82)),
+    url('/assets/back.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text-main);
+  padding-bottom: 34px;
+}
+
+a, button, input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: #0b1622;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  border-left: 6px solid #22c55e;
+  animation: slideIn 0.2s ease-out;
+  max-width: 320px;
+  font-weight: 600;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body { background-attachment: scroll; }
+  .wrapper { padding: 16px; }
+  
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  
+  .toast { max-width: none; }
+}

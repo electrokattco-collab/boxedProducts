@@ -1,0 +1,67 @@
+# Cloud Build configuration for BoxedSneakers
+# Builds container and deploys to Google Cloud Run
+
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.cloudrun'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:latest'
+      - '.'
+    timeout: 600s
+
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:$COMMIT_SHA'
+    timeout: 300s
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:latest'
+    timeout: 300s
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'boxed-sneakers'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:$COMMIT_SHA'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=8080'
+      - '--memory=256Mi'
+      - '--cpu=1'
+      - '--concurrency=1000'
+      - '--max-instances=100'
+      - '--min-instances=0'
+      - '--timeout=300'
+      - '--ingress=all'
+      - '--allow-unauthenticated'
+      - '--service-account=${_SERVICE_ACCOUNT}'
+      - '--set-env-vars=NODE_ENV=production'
+      - '--health-check-path=/health'
+    timeout: 300s
+
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: boxed-sneakers-repo
+  _SERVICE_ACCOUNT: boxed-sneakers-sa@$PROJECT_ID.iam.gserviceaccount.com
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/boxed-sneakers:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  
+timeout: 1800s

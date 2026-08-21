@@ -11,7 +11,12 @@
     "test:integration": "jest --testPathPattern=tests/integration",
     "test:auth": "jest --testPathPattern=auth",
     "test:product": "jest --testPathPattern=product",
-    "test:ui": "jest --testPathPattern=ui"
+    "test:ui": "jest --testPathPattern=ui",
+    "build": "node scripts/build.js",
+    "build:clean": "rm -rf dist || rmdir /S /Q dist",
+    "optimize": "node scripts/optimize-build.js",
+    "health-check": "node monitoring/health-check.js",
+    "predeploy": "npm run build && npm run optimize"
   },
   "keywords": [
     "e-commerce",
@@ -22,7 +27,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-react": "^8.0.1",
     "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.60.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0"
   },

@@ -79,19 +79,103 @@ export async function saveUserProfile(uid, profileData) {
 /**
  * Create user profile after first login
  * @param {Object} user - Firebase user object
+ * @param {Object} additionalData - Additional profile data
  * @returns {Promise<{success: boolean, error?: string}>}
  */
-export async function createUserProfile(user) {
+export async function createUserProfile(user, additionalData = {}) {
     const profileData = {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        emailVerified: user.emailVerified,
-        provider: user.providerData[0]?.providerId || 'password'
+        displayName: user.displayName || additionalData.displayName || '',
+        photoURL: user.photoURL || additionalData.photoURL || '',
+        role: additionalData.role || 'customer', // Default role is customer
+        emailVerified: user.emailVerified || false,
+        provider: user.providerData[0]?.providerId || 'password',
+        phoneNumber: additionalData.phoneNumber || '',
+        address: additionalData.address || {
+            street: '',
+            city: '',
+            province: '',
+            postalCode: '',
+            country: 'South Africa'
+        },
+        preferences: additionalData.preferences || {
+            newsletter: false,
+            notifications: true
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString()
     };
     
     return await saveUserProfile(user.uid, profileData);
+}
+
+/**
+ * Get user role from profile
+ * @param {string} uid - User ID
+ * @returns {Promise<string|null>} User role or null
+ */
+export async function getUserRole(uid) {
+    try {
+        const result = await getUserProfile(uid);
+        if (result.success && result.data) {
+            return result.data.role || 'customer';
+        }
+        return null;
+    } catch (error) {
+        console.error('[UserService] Get role error:', error);
+        return null;
+    }
+}
+
+/**
+ * Update user role (admin function)
+ * @param {string} uid - User ID
+ * @param {string} role - New role ('admin' or 'customer')
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function updateUserRole(uid, role) {
+    try {
+        if (!['admin', 'customer'].includes(role)) {
+            return { success: false, error: 'Invalid role' };
+        }
+        
+        return await saveUserProfile(uid, { role });
+    } catch (error) {
+        console.error('[UserService] Update role error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Update user address
+ * @param {string} uid - User ID
+ * @param {Object} address - Address object
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function updateUserAddress(uid, address) {
+    try {
+        return await saveUserProfile(uid, { address });
+    } catch (error) {
+        console.error('[UserService] Update address error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Update user phone number
+ * @param {string} uid - User ID
+ * @param {string} phoneNumber - Phone number
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function updateUserPhone(uid, phoneNumber) {
+    try {
+        return await saveUserProfile(uid, { phoneNumber });
+    } catch (error) {
+        console.error('[UserService] Update phone error:', error);
+        return { success: false, error: error.message };
+    }
 }
 
 /**

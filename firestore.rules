@@ -24,28 +24,82 @@ service cloud.firestore {
       return email.matches('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$');
     }
     
-    // Validate string length
+    // Validate string length with bounds checking
     function isValidString(value, minLen, maxLen) {
-      return value is string && value.size() >= minLen && value.size() <= maxLen;
+      return value is string 
+        && value.size() >= minLen 
+        && value.size() <= maxLen;
+    }
+    
+    // Validate price is a positive number with max limit
+    function isValidPrice(price) {
+      return price is number 
+        && price >= 0 
+        && price <= 999999999;
+    }
+    
+    // Validate quantity is a non-negative integer
+    function isValidQuantity(qty) {
+      return qty is int 
+        && qty >= 0 
+        && qty <= 999999;
+    }
+    
+    // Validate URL format
+    function isValidUrl(url) {
+      return url is string 
+        && url.matches('^https?://.*');
+    }
+    
+    // Validate inventory status
+    function isValidInventoryStatus(status) {
+      return status is string 
+        && status in ['inStock', 'lowStock', 'outOfStock', 'discontinued'];
+    }
+    
+    // Validate category
+    function isValidCategory(category) {
+      return category is string 
+        && category in ['shoes', 'electronics', 'digital', 'furniture', 'clothing', 'accessories'];
+    }
+    
+    // Check if data doesn't contain forbidden fields
+    function hasNoForbiddenFields(data, forbiddenFields) {
+      return !data.keys().hasAny(forbiddenFields);
     }
     
     // ========== PRODUCTS COLLECTION ==========
     match /products/{productId} {
-      // Anyone can read products (public storefront)
-      allow read: if true;
+      // Anyone can read visible products
+      allow list: if true;
+      allow get: if true;
       
-      // Only admins can create, update, delete
+      // Only admins can create products
       allow create: if isAdmin() 
-        && request.resource.data.keys().hasAll(['name', 'price', 'category'])
-        && request.resource.data.name is string
-        && request.resource.data.name.size() > 0
-        && request.resource.data.price is number
-        && request.resource.data.price >= 0;
+        && request.resource.data.keys().hasAll(['name', 'price', 'category', 'createdAt', 'lastUpdated'])
+        && request.resource.data.keys().hasAny(['isVisible'])
+        && isValidString(request.resource.data.name, 1, 200)
+        && isValidPrice(request.resource.data.price)
+        && isValidCategory(request.resource.data.category)
+        && (!request.resource.data.keys().hasAny(['stockQuantity']) || isValidQuantity(request.resource.data.stockQuantity))
+        && (!request.resource.data.keys().hasAny(['inventoryStatus']) || isValidInventoryStatus(request.resource.data.inventoryStatus))
+        && (!request.resource.data.keys().hasAny(['images']) || request.resource.data.images is list)
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.lastUpdated is timestamp
+        && hasNoForbiddenFields(request.resource.data, ['id', 'documentId']);
       
+      // Only admins can update products
+      // Prevent changing createdAt, enforce updated timestamps
       allow update: if isAdmin()
-        && (!request.resource.data.diff(resource.data).affectedKeys()
-            .hasAny(['createdAt']));
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['createdAt', 'id']))
+        && (!request.resource.data.keys().hasAny(['name']) || isValidString(request.resource.data.name, 1, 200))
+        && (!request.resource.data.keys().hasAny(['price']) || isValidPrice(request.resource.data.price))
+        && (!request.resource.data.keys().hasAny(['category']) || isValidCategory(request.resource.data.category))
+        && (!request.resource.data.keys().hasAny(['stockQuantity']) || isValidQuantity(request.resource.data.stockQuantity))
+        && (!request.resource.data.keys().hasAny(['inventoryStatus']) || isValidInventoryStatus(request.resource.data.inventoryStatus))
+        && request.resource.data.lastUpdated == request.time;
       
+      // Only admins can delete products
       allow delete: if isAdmin();
     }
     
@@ -55,16 +109,21 @@ service cloud.firestore {
       // Admins can read any profile
       allow read: if isOwner(userId) || isAdmin();
       
-      // Users can create their own profile
-      // System can create profiles on user creation
+      // Users can create their own profile on first sign-in
       allow create: if isOwner(userId)
-        && request.resource.data.keys().hasAll(['email', 'createdAt'])
-        && request.resource.data.email == request.auth.token.email;
+        && request.resource.data.keys().hasAll(['email', 'createdAt', 'uid'])
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.uid == request.auth.uid
+        && isValidEmail(request.resource.data.email)
+        && (!request.resource.data.keys().hasAny(['displayName']) || isValidString(request.resource.data.displayName, 0, 100))
+        && hasNoForbiddenFields(request.resource.data, ['role', 'admin', 'isAdmin', 'permissions'])
+        && request.resource.data.createdAt is timestamp;
       
-      // Users can update their own profile (except role/admin fields)
+      // Users can update their own profile (except role/admin fields and email/uid)
       allow update: if isOwner(userId)
-        && (!request.resource.data.diff(resource.data).affectedKeys()
-            .hasAny(['role', 'admin', 'createdAt']));
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'admin', 'isAdmin', 'permissions', 'createdAt', 'uid', 'email']))
+        && (!request.resource.data.keys().hasAny(['displayName']) || isValidString(request.resource.data.displayName, 0, 100))
+        && request.resource.data.updatedAt is timestamp;
       
       // Only admins can delete user profiles
       allow delete: if isAdmin();
@@ -76,20 +135,34 @@ service cloud.firestore {
       // Admins can read all orders
       allow read: if isOwner(resource.data.userId) || isAdmin();
       
-      // Authenticated users can create orders
+      // Authenticated users can create their own orders
       allow create: if isAuthenticated()
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.keys().hasAll(['userId', 'items', 'total', 'status', 'createdAt']);
+        && request.resource.data.keys().hasAll(['userId', 'items', 'total', 'status', 'createdAt'])
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 100
+        && isValidPrice(request.resource.data.total)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt is timestamp
+        && hasNoForbiddenFields(request.resource.data, ['id', 'documentId']);
       
-      // Users can update their own orders (limited fields)
+      // Users can only cancel their own orders (status to cancelled)
       // Admins can update any order
-      allow update: if (isOwner(resource.data.userId) 
-          && request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['status'])) 
-        || isAdmin();
+      allow update: if isAdmin()
+        || (isOwner(resource.data.userId) 
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+            && request.resource.data.status == 'cancelled'
+            && resource.data.status == 'pending');
       
       // Only admins can delete orders
       allow delete: if isAdmin();
+    }
+    
+    // ========== ORDER ITEMS SUBCOLLECTION ==========
+    match /orders/{orderId}/items/{itemId} {
+      allow read: if isOwner(get(/databases/$(database)/documents/orders/$(orderId)).data.userId) || isAdmin();
+      allow write: if isAdmin();
     }
     
     // ========== ADMIN LOGS COLLECTION ==========
@@ -99,16 +172,24 @@ service cloud.firestore {
       
       // Authenticated admins can create logs
       allow create: if isAdmin()
-        && request.resource.data.keys().hasAll(['action', 'timestamp', 'user']);
+        && request.resource.data.keys().hasAll(['action', 'timestamp', 'user'])
+        && isValidString(request.resource.data.action, 1, 50)
+        && isValidString(request.resource.data.user, 1, 100)
+        && request.resource.data.timestamp is timestamp
+        && hasNoForbiddenFields(request.resource.data, ['id']);
       
       // No updates or deletes allowed for logs (append-only)
       allow update, delete: if false;
     }
     
-    // ========== CARTS COLLECTION (Future) ==========
+    // ========== CARTS COLLECTION ==========
     match /carts/{cartId} {
       // Users can read/write their own cart
-      // Cart ID should match user ID for user carts
+      allow read, write: if isOwner(cartId);
+    }
+    
+    // ========== CART ITEMS SUBCOLLECTION ==========
+    match /carts/{cartId}/items/{itemId} {
       allow read, write: if isOwner(cartId);
     }
     
@@ -119,6 +200,12 @@ service cloud.firestore {
       
       // Only admins can write settings
       allow write: if isAdmin();
+    }
+    
+    // ========== RATE LIMITING COLLECTION ==========
+    match /rateLimits/{userId} {
+      // Users can only access their own rate limit records
+      allow read, write: if isOwner(userId);
     }
     
     // ========== DEFAULT DENY ==========

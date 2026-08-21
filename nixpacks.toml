@@ -1,0 +1,15 @@
+# Nixpacks Configuration for Boxed Sneakers
+# Place this file in project root for custom Nixpacks settings
+
+[phases.setup]
+nixPkgs = ["nodejs_18"]
+
+[phases.build]
+cmds = ["npm ci --omit=dev", "npm run build"]
+
+[phases.deploy]
+startCmd = "npx serve dist -l 3000"
+
+[static]
+# Serve static files from dist directory
+serve = "dist"

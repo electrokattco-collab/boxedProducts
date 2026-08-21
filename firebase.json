@@ -1,19 +1,11 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
   "hosting": {
-    "public": ".",
+    "site": "boxedsneakers",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "scripts/**",
-      "**/.git/**",
-      "**/.claude/**",
-      "**/.agents/**",
-      "**/.junie/**"
+      "**/node_modules/**"
     ],
     "rewrites": [
       {
@@ -21,59 +13,58 @@
         "destination": "/admin.html"
       },
       {
-        "source": "/login",
-        "destination": "/pages/login.html"
+        "source": "/cart",
+        "destination": "/boxedCart.html"
+      },
+      {
+        "source": "/about",
+        "destination": "/boxedAboutUs.html"
+      },
+      {
+        "source": "/contact",
+        "destination": "/boxedContacts.html"
       }
     ],
     "headers": [
       {
+        "source": "**/*.@(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(css|js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800, must-revalidate"
+          }
+        ]
+      },
+      {
         "source": "**/*.html",
         "headers": [
           {
-            "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://accounts.google.com 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://*.firebaseio.com https://*.googleapis.com https://*.googleusercontent.com blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.google-analytics.com https://www.gstatic.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
-          },
-          {
-            "key": "X-Content-Type-Options",
-            "value": "nosniff"
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
           },
           {
             "key": "X-Frame-Options",
             "value": "SAMEORIGIN"
           },
           {
-            "key": "X-XSS-Protection",
-            "value": "1; mode=block"
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
           },
           {
-            "key": "Referrer-Policy",
-            "value": "strict-origin-when-cross-origin"
-          }
-        ]
-      },
-      {
-        "source": "**/*.js",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript"
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
           }
         ]
       }
     ]
-  },
-  "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "hosting": {
-      "port": 5000
-    },
-    "ui": {
-      "enabled": true
-    }
   }
 }
